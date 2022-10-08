@@ -1,5 +1,30 @@
 const mongoose = require('mongoose');
 
+// Change this schema when you are done with changing the code for express
+
+// const EmployeeSchema = mongoose.Schema(
+// 	{
+// 		user: {
+// 			type: mongoose.Types.ObjectId,
+// 			ref: "User",
+// 			required: true,
+// 		},
+// 		company: { type: mongoose.Types.ObjectId, ref: "Company", required: true },
+// 		department_name: String,
+// 		joining_date: Date,
+// 		disabled: {
+// 			type: Boolean,
+// 			default: false
+// 		},
+// 		tasks: [{type: mongoose.Types.ObjectId, ref: "Tasks", required: true}],
+// 	},
+// 	{ timestamps: true }
+// );
+
+// module.exports = mongoose.Model.Employee || mongoose.model("Employee", EmployeeSchema);
+
+
+
 const Schema = mongoose.Schema;
 
 const Employee = new Schema({

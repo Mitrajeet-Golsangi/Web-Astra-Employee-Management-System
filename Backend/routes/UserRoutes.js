@@ -60,48 +60,53 @@ router.post('/signup', (req, res, next) => {
 
 // Login and save session cookie
 // completed partially 
-router.post('/login', (req, res, next) => {
-    if(req.session.email){
-        res.setHeader('Content-Type', 'text/html');
-        console.log("Your are already logged in!!") ;
-        res.redirect('/');
-    }
-    Users.findOne({ email: req.body.email })
-        .then((user) => {
-            if (user != null) {
-                if (user.password === req.body.password) {
-                    req.session.email = req.body.email;
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', ' application/json');
-                    // res.json({success: true,message:"Welcome, Your are successfully loged in !!!!!"});
-                    // res.redirect('/');
-                    req.session.regenerate(function (err) {
-                        if (err) next(err)
-                    
-                        // store user information in session, typically a user id
-                        req.session.email = req.body.email
-                    
-                        // save the session before redirection to ensure page
-                        // load does not happen before session is saved
-                        req.session.save(function (err) {
-                          if (err) return next(err)
-                          res.redirect('/')
-                        })
-                      })
+router.post('/login', async (req, res, next) => {
+	const user = await Users.findOne({ email: req.body.email }).catch(err =>
+		next(err)
+	);
 
+	if (req.session.email) {
+		res.setHeader('Content-Type', 'application/json');
+		res.statusCode = 200;
+		res.send(user);
+	} else {
+		if (user != null) {
+			if (user.password === req.body.password) {
+				req.session.email = req.body.email;
+				// res.setHeader('Content-Type', ' application/json');
+				res.statusCode = 200;
+				// res.json({success: true,message:"Welcome, Your are successfully loged in !!!!!"});
+				// res.redirect('/');
+				req.session.regenerate(function (err) {
+					if (err) next(err);
 
-                } else {
-                    res.statusCode = 403;
-                    res.setHeader('Content-Type', 'application/json');
-                    res.json({ success: false, message: `${req.body.password} is wrong password` });
-                }
-            } else {
-                res.statusCode = 404;
-                res.setHeader('Content-Type', 'application/json');
-                res.json({ success: false, message: `User with email ${req.body.email} does not exist !!!!` });
-            }
-        }, (err) => next(err))
-        .catch((err) => next(err));
+					// store user information in session, typically a user id
+					req.session.email = req.body.email;
+
+					// save the session before redirection to ensure page
+					// load does not happen before session is saved
+					req.session.save(function (err) {
+						if (err) return next(err);
+						res.send(user);
+					});
+				});
+			} else {
+				res.statusCode = 403;
+				res.setHeader('Content-Type', 'application/json');
+				res.json({
+					success: false,
+					message: `${req.body.password} is wrong password`,
+				});
+			}
+		} else {
+			res.statusCode = 404;
+			res.setHeader('Content-Type', 'application/json');
+			res.json({
+				success: false,
+				message: `User with email ${req.body.email} does not exist !!!!`,
+			});
+		}
+	}
 });
 
 

@@ -24,7 +24,7 @@ router.use(bodyParser.json());
 
 // Get the data of all the employees in database
 //[Done]
-router.get('/',(req,res,next)=>{
+router.get('/',isauth,(req,res,next)=>{
 
     Employees.find({})
     .populate('user')
@@ -46,7 +46,7 @@ router.post('/signup',(req,res,next)=>{
     const user = req.body.user;
     const company = req.body.company;
     const department_name = req.body.department_name;
-    const joining_date =Date(); 
+    const joining_date = Date(); 
 
     // Not getting Logic
 
@@ -137,7 +137,7 @@ router.post('/login', (req, res, next) => {
 
 // Gettinng employee by id
 //[Done]
-router.get('/:Id',(req, res, next) => {
+router.get('/:Id',isauth,(req, res, next) => {
     Employees.findById(req.params.Id)
         .populate('user')
         .populate('company')
@@ -153,7 +153,7 @@ router.get('/:Id',(req, res, next) => {
 
 // completed successfully   
 //[Done]
-router.put('/:Id', (req, res, next) => {
+router.put('/:Id',isauth, (req, res, next) => {
     Users.findByIdAndUpdate(req.params.Id, req.body)
         .then((employee) => {
             // Users.save();
@@ -167,7 +167,7 @@ router.put('/:Id', (req, res, next) => {
 
 //[Done]
 // Delete all the employees database
-router.delete('/',(req,res,next)=>{
+router.delete('/',isauth,(req,res,next)=>{
     Employees.remove({})
     .then((val)=>{
         res.statusCode = 200;
@@ -180,7 +180,7 @@ router.delete('/',(req,res,next)=>{
 
 // Deleting a Employee using it's id
 //[Done]
-router.delete('/:Id', (req, res, next) => {
+router.delete('/:Id',isauth, (req, res, next) => {
     Employees.deleteOne({ "_id": req.params.Id })
         .then((resp) => {
             res.statusCode = 200;

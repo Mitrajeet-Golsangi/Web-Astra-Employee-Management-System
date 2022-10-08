@@ -14,7 +14,7 @@ const  isauth = (req,res,next)=>{
         next();
     }else{
         // res.redirect('/users/login');
-        res.end("You are not logged in");
+        res.end("You are not logged in !!!!\nGo and log in first ");
     }
 }
 
@@ -23,7 +23,7 @@ router.use(bodyParser.json());
 
 //Get all the Users
 // completed successfully
-router.get('/', (req, res, next) => {
+router.get('/',isauth, (req, res, next) => {
     Users.find({})
         .populate('company')
         .then((users) => {
@@ -131,7 +131,7 @@ router.get('/logout', (req, res,next) => {
 
 // Create the user with Id 
 // completed successfully
-router.get('/:Id',(req, res, next) => {
+router.get('/:Id',isauth,(req, res, next) => {
     Users.findById(req.params.Id)
         .then((user) => {
             res.statusCode = 200;
@@ -143,7 +143,7 @@ router.get('/:Id',(req, res, next) => {
 
 //Changing User Data 
 // completed successfully   
-router.put('/:Id', (req, res, next) => {
+router.put('/:Id', isauth,(req, res, next) => {
     const email = req.body.email;
 
     if(email){

@@ -61,27 +61,27 @@ router.post('/',(req,res,next)=>{
 
 
 //Gettinng employee by id
-router.get('/:Id',(req, res, next) => {
-    Employees.findById(req.params.Id)
-        .then((user) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(user);
-        })
-        .catch((err) => next(err));
-}, (err) => next(err));
+// router.get('/:Id',(req, res, next) => {
+//     Employees.findById(req.params.Id)
+//         .then((user) => {
+//             res.statusCode = 200;
+//             res.setHeader('Content-Type', 'application/json');
+//             res.json(user);
+//         })
+//         .catch((err) => next(err));
+// }, (err) => next(err));
 
-// completed successfully   
-UserRouter.put('/:Id',isauth, (req, res, next) => {
-    Users.findByIdAndUpdate(req.params.Id, req.body)
-        .then((user) => {
-            // Users.save();
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({ message: "User updated successfully", user: user });
-        }, (err) => next(err))
-        .catch((err) => next(err));
-}, (err) => next(err));
+// // completed successfully   
+// UserRouter.put('/:Id',isauth, (req, res, next) => {
+//     Users.findByIdAndUpdate(req.params.Id, req.body)
+//         .then((user) => {
+//             // Users.save();
+//             res.statusCode = 200;
+//             res.setHeader('Content-Type', 'application/json');
+//             res.json({ message: "User updated successfully", user: user });
+//         }, (err) => next(err))
+//         .catch((err) => next(err));
+// }, (err) => next(err));
 
 
 

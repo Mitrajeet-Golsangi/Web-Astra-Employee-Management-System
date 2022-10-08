@@ -1,20 +1,18 @@
 
 const express = require('express');
-const Employees = require('../models/Employees');
+const Companies = require('../models/Company');
 const bodyParser = require('body-parser');
-const Users = require('../models/User');
 
 
-
-// Creating a Router for Employees Operations
+// Creating a Router for Companies Operations
 const router = express.Router();
 
-//Authantication for login
+//Work in Progress Feature [Authantication]
 const  isauth = (req,res,next)=>{
     if(req.session.email){
         next();
     }else{
-        // res.redirect('/users/login');
+        // res.redirect('/companys/login');
         res.end("You are not  logged in");
     }
 }
@@ -22,71 +20,52 @@ const  isauth = (req,res,next)=>{
 //Parsing body of requests to json object
 router.use(bodyParser.json());
 
-// Get the data of all the employees in database
+// Get the data of all the Companies in database
 //[Done]
 router.get('/',(req,res,next)=>{
 
-    Employees.find({})
-    .populate('user')
-    .populate('company')
-    .populate('tasks')
-    .then((employees)=>{
+    Companies.find({})
+    .then((company)=>{
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json'); 
-        console.log(employees);
-        res.json(employees);
+        console.log(company);
+        res.json(company);
     },(err)=>next(err))
     .catch((err)=>next(err));
 });
 
-// Create an employee entry in database with Uinque Email address only....
-//[Not Done]
+// Create an company entry in database with Uinque Email address only....
+//[Done]
 router.post('/signup',(req,res,next)=>{
     
-    const user = req.body.user;
-    const company = req.body.company;
-    const department_name = req.body.department_name;
-    const joining_date =Date(); 
+    const email = req.body.email;
+    const name = req.body.name;
+    const type = req.body.type;
+    const departments = req.body.departments;
+    const address = req.body.address;
 
-    // Not getting Logic
+    Companies.findOne({email})
+    .then((company)=>{
+        if(company){
+            res.statusCode = 400;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({message :  `company with ${email} exists in the database, go to login section.`})
+            console.log("company Exists Already !!!!")
+        }else{
+            Companies.create({email,name,type,departments,address})
+            .then((company)=>{
+                console.log(company);
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(company);
+            },(err)=>next(err))
+            .catch((err)=>{
+                console.log(err);
+            });
+        }
+    })
+    .catch((err)=>next(err));
 
-    // Users.findById(user)
-    // .then((data)=>{
-    //     if(data){
-    //         const dataemail = data.email;
-    //         Employees.findOne({email : dataemail})
-    //         .then((employee)=>{
-    //             if(employee){
-    //                 res.statusCode = 400;
-    //                 res.setHeader('Content-Type', 'application/json');
-    //                 res.json({message :  `User with ${data.email} exists in the database, go to login section.`})
-    //                 console.log("User Exists Already !!!!")
-    //             }else{
-                   
-    //             }
-    //         })
-    //         .catch((err)=>next(err));
-
-    //     }else{
-    //         res.statusCode = 400;
-    //         res.setHeader('Content-Type', ' application/json');
-    //         res.json({message: ` User with id = ${user} does not exist !!!`});
-    //     }
-    // })
-    // .catch((err)=> next(err));
-
-    //direct method
-
-    Employees.create({user,company,department_name,joining_date})
-    .then((employee)=>{
-        console.log(employee);
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(employee);
-    },(err)=>next(err))
-    .catch((err)=>{
-        console.log(err);
-    });
 });
 
 //longging in if not 
@@ -97,10 +76,12 @@ router.post('/login', (req, res, next) => {
         console.log("Your are already logged in!!") ;
         res.redirect('/');
     }
-    Users.findOne({ email: req.body.email })
-        .then((user) => {
-            if (user != null) {
-                if (user.password === req.body.password) {
+    Companies.findOne({ email: req.body.email })
+        .then((company) => {
+
+            if (company != null) {
+                
+                if (company.password === req.body.password) {
                     req.session.email = req.body.email;
                     res.statusCode = 200;
                     res.setHeader('Content-Type', ' application/json');
@@ -109,7 +90,7 @@ router.post('/login', (req, res, next) => {
                     req.session.regenerate(function (err) {
                         if (err) next(err)
                     
-                        // store user information in session, typically a user id
+                        // store company information in session, typically a company id
                         req.session.email = req.body.email
                     
                         // save the session before redirection to ensure page
@@ -129,46 +110,43 @@ router.post('/login', (req, res, next) => {
             } else {
                 res.statusCode = 404;
                 res.setHeader('Content-Type', 'application/json');
-                res.json({ success: false, message: `User with email ${req.body.email} does not exist !!!!` });
+                res.json({ success: false, message: `company with email ${req.body.email} does not exist !!!!` });
             }
         }, (err) => next(err))
         .catch((err) => next(err));
 });
 
-// Gettinng employee by id
+// Gettinng company data by id
 //[Done]
 router.get('/:Id',(req, res, next) => {
-    Employees.findById(req.params.Id)
-        .populate('user')
-        .populate('company')
-        .populate('tasks')
-        .then((employee) => {
+    Companies.findById(req.params.Id)
+        .then((company) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(employee);
+            res.json(company);
         })
         .catch((err) => next(err));
 }, (err) => next(err));
 
 
-// completed successfully   
-//[Done]
+// completed successfully
+//[Done]   
 router.put('/:Id', (req, res, next) => {
-    Users.findByIdAndUpdate(req.params.Id, req.body)
-        .then((employee) => {
-            // Users.save();
+    companys.findByIdAndUpdate(req.params.Id, req.body)
+        .then((company) => {
+            // companys.save();
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json({ message: "User updated successfully", employee: employee });
+            res.json({ message: "company updated successfully", company: company });
         }, (err) => next(err))
         .catch((err) => next(err));
 }, (err) => next(err));
 
 
+// Delete all the Companies database
 //[Done]
-// Delete all the employees database
 router.delete('/',(req,res,next)=>{
-    Employees.remove({})
+    Companies.remove({})
     .then((val)=>{
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -178,10 +156,11 @@ router.delete('/',(req,res,next)=>{
     .catch((err)=>next(err));
 })
 
-// Deleting a Employee using it's id
+
+// Deleting a company using it's id
 //[Done]
 router.delete('/:Id', (req, res, next) => {
-    Employees.deleteOne({ "_id": req.params.Id })
+    Companies.deleteOne({ "_id": req.params.Id })
         .then((resp) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
@@ -190,6 +169,5 @@ router.delete('/:Id', (req, res, next) => {
         }, (err) => next(err))
         .catch((err) => next(err));
 });
-
 
 module.exports = router;

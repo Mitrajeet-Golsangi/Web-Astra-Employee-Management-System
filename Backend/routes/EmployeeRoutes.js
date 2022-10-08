@@ -12,7 +12,7 @@ router.use(bodyParser.json());
 
 // Get the data of all the employees in database
 //[Done]
-router.get('/signup',(req,res,next)=>{
+router.get('/',(req,res,next)=>{
 
     Employees.find({})
     .then((employees)=>{

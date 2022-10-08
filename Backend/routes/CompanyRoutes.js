@@ -22,7 +22,7 @@ router.use(bodyParser.json());
 
 // Get the data of all the Companies in database
 //[Done]
-router.get('/',(req,res,next)=>{
+router.get('/',isauth,(req,res,next)=>{
 
     Companies.find({})
     .then((company)=>{
@@ -70,7 +70,7 @@ router.post('/signup',(req,res,next)=>{
 
 //longging in if not 
 //[Done]
-router.post('/login', (req, res, next) => {
+router.post('/login',(req, res, next) => {
     if(req.session.email){
         res.setHeader('Content-Type', 'text/html');
         console.log("Your are already logged in!!") ;
@@ -118,7 +118,7 @@ router.post('/login', (req, res, next) => {
 
 // Gettinng company data by id
 //[Done]
-router.get('/:Id',(req, res, next) => {
+router.get('/:Id',isauth,(req, res, next) => {
     Companies.findById(req.params.Id)
         .then((company) => {
             res.statusCode = 200;
@@ -131,7 +131,7 @@ router.get('/:Id',(req, res, next) => {
 
 // completed successfully
 //[Done]   
-router.put('/:Id', (req, res, next) => {
+router.put('/:Id',isauth, (req, res, next) => {
     companys.findByIdAndUpdate(req.params.Id, req.body)
         .then((company) => {
             // companys.save();
@@ -145,7 +145,7 @@ router.put('/:Id', (req, res, next) => {
 
 // Delete all the Companies database
 //[Done]
-router.delete('/',(req,res,next)=>{
+router.delete('/',isauth,(req,res,next)=>{
     Companies.remove({})
     .then((val)=>{
         res.statusCode = 200;
@@ -159,7 +159,7 @@ router.delete('/',(req,res,next)=>{
 
 // Deleting a company using it's id
 //[Done]
-router.delete('/:Id', (req, res, next) => {
+router.delete('/:Id', isauth,(req, res, next) => {
     Companies.deleteOne({ "_id": req.params.Id })
         .then((resp) => {
             res.statusCode = 200;

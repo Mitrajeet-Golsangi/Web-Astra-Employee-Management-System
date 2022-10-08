@@ -1,0 +1,31 @@
+-----Backend----
+
+--Models--
+
+1] User        -[Done]
+2] Employee    -[Done]
+3] Company     -[Done]
+4] Task        -[Done]
+5] Company[u]
+6] 
+
+--Routers--
+
+1] UserRouter      -[Done]
+2] EmployeeRouter  -[Done]
+3] CompanyRouter   -[Done]
+4] TaskRouter      -[Done]
+
+--Authentication--
+
+1] Temperory Authentication Done with Sessions
+2] Logical Authentication is Remaining
+
+
+
+
+
+
+
+
+----Frontend----

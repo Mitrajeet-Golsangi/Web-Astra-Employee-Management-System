@@ -15,6 +15,7 @@ const  isauth = (req,res,next)=>{
     }else{
         // res.redirect('/users/login');
         res.end("You are not logged in !!!!\nGo and log in first ");
+        res.statusCode = 403;
     }
 }
 

@@ -47,46 +47,19 @@ router.post('/signup',(req,res,next)=>{
     const company = req.body.company;
     const department_name = req.body.department_name;
     const joining_date = Date(); 
+    const tasks= req.body.tasks;
 
-    // Not getting Logic
-
-    // Users.findById(user)
-    // .then((data)=>{
-    //     if(data){
-    //         const dataemail = data.email;
-    //         Employees.findOne({email : dataemail})
-    //         .then((employee)=>{
-    //             if(employee){
-    //                 res.statusCode = 400;
-    //                 res.setHeader('Content-Type', 'application/json');
-    //                 res.json({message :  `User with ${data.email} exists in the database, go to login section.`})
-    //                 console.log("User Exists Already !!!!")
-    //             }else{
-                   
-    //             }
-    //         })
-    //         .catch((err)=>next(err));
-
-    //     }else{
-    //         res.statusCode = 400;
-    //         res.setHeader('Content-Type', ' application/json');
-    //         res.json({message: ` User with id = ${user} does not exist !!!`});
-    //     }
-    // })
-    // .catch((err)=> next(err));
-
-    //direct method
-
-    Employees.create({user,company,department_name,joining_date})
-    .then((employee)=>{
-        console.log(employee);
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(employee);
+    Users.findById(user)
+    .then((user)=>{
+        if(user){
+            Employees.create(user,company,department_name,joining_date,tasks);
+        }else{
+            res.statusCode = 404;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({success:false,message: "User not found !!!\n Please create a user first"});
+        }
     },(err)=>next(err))
-    .catch((err)=>{
-        console.log(err);
-    });
+    .catch((err)=>next(err));
 });
 
 //longging in if not 

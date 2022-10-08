@@ -29,7 +29,7 @@ const UserSchema = mongoose.Schema(
 			default: false,
 		},
 		email_verified: { type: Boolean, default: false },
-		company: { type: mongoose.Types.ObjectId, ref: "Company", required: true },
+		company: { type: mongoose.Types.ObjectId, ref: "Company", required: false ,default:null},
 	},
 	{ timestamps: true }
 );

@@ -1,1 +1,3 @@
-EmployeeRouter.js -> signup logic and Tasks are not adding in the array
+1] EmployeeRouter.js -> 
+[Solved]    i)  Signup Logic not clear 
+[Solved]    ii) Tasks array not taking the data from the body of request

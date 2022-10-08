@@ -44,8 +44,6 @@ app.use(session({
   }));
   
 
-
-
 app.use("/emp", EmployeeRouter);
 app.use("/comp",CompanyRouter);
 app.use("/user",UserRouter);

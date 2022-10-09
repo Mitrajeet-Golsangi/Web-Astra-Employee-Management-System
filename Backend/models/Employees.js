@@ -9,7 +9,7 @@ const EmployeeSchema = mongoose.Schema(
 			ref: "User",
 			required: true,
 		},
-		company: { type: mongoose.Types.ObjectId, ref: "Company", required: true },
+		company: { type: mongoose.Schema.Types.ObjectId, ref: "Company", required: true },
 		department_name: String,
 		joining_date: Date,
 		disabled: {

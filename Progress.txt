@@ -28,7 +28,7 @@
 
 --Tasks--
 
-1] In RaskRouter.js when a task is created push that task into the Employee.js tasks array
+1] In RaskRouter.js when a task is created push that task into the Employee.js tasks array [Done]
 
 
 ----Frontend----

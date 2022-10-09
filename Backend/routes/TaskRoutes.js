@@ -22,7 +22,7 @@ router.use(bodyParser.json());
 
 // Get the data of all the Tasks in database
 //[Done]
-router.get('/',(req,res,next)=>{
+router.get('/',isauth,(req,res,next)=>{
 
     Tasks.find({})
     .then((task)=>{
@@ -107,7 +107,7 @@ router.post('/signup',(req,res,next)=>{
 
 // Gettinng task data by id
 //[Done]
-router.get('/:Id',(req, res, next) => {
+router.get('/:Id',isauth,(req, res, next) => {
     Tasks.findById(req.params.Id)
         .then((task) => {
             res.statusCode = 200;
@@ -120,7 +120,7 @@ router.get('/:Id',(req, res, next) => {
 
 // completed successfully
 //[Done]   
-router.put('/:Id', (req, res, next) => {
+router.put('/:Id', isauth,(req, res, next) => {
     tasks.findByIdAndUpdate(req.params.Id, req.body)
         .then((task) => {
             // tasks.save();
@@ -134,7 +134,7 @@ router.put('/:Id', (req, res, next) => {
 
 // Delete all the Tasks database
 //[Done]
-router.delete('/',(req,res,next)=>{
+router.delete('/',isauth,(req,res,next)=>{
     Tasks.remove({})
     .then((val)=>{
         res.statusCode = 200;
@@ -148,7 +148,7 @@ router.delete('/',(req,res,next)=>{
 
 // Deleting a task using it's id
 //[Done]
-router.delete('/:Id', (req, res, next) => {
+router.delete('/:Id',isauth, (req, res, next) => {
     Tasks.deleteOne({ "_id": req.params.Id })
         .then((resp) => {
             res.statusCode = 200;

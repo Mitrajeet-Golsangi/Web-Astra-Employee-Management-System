@@ -16,7 +16,7 @@ const EmployeeSchema = mongoose.Schema(
 			type: Boolean,
 			default: false
 		},
-		tasks: [{type: mongoose.Types.ObjectId, ref: "Tasks"}],
+		tasks: {type: [mongoose.Schema.Types.ObjectId], ref: "Tasks"},
 	},
 	{ timestamps: true }
 );

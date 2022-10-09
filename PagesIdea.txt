@@ -1,0 +1,88 @@
+
+1] Home
+    
+    Login 
+    Register
+
+2] Login
+
+    [Email] [Password]
+
+    {
+        if(user){
+            // User can be an admin or and Employee
+
+            // Way to decide is admin or employee 
+
+            (User.js) Update - [We have to give user a key !!!!!!!!!]
+
+            if(user.key === Admin){
+                
+                Go to Admin-Home
+
+            }else (user.key === Employee){
+                Go to Employee-Dashboard
+            }
+
+        }else{
+            
+            Go to Register
+
+        }
+    }
+
+
+
+3] Register
+
+    [User.js Model fields]
+
+    (Everything on onePage !!!)
+
+    if(admin Ragistration){
+        [toggle and add extra fields]
+        Go to Admin Home Page and will be able to see other admins
+    
+    }else if(Company Admin Ragistration){
+        [toggle and add extra fields]
+        Got to Employee-Dashboard
+    }
+    
+    Employee Registration
+
+
+4] Admin-Home
+
+    Add Employee
+    Add Admin
+    Disable Employee
+    Employees List
+
+        i] Add Employee
+            [Email] [Department]
+            if(Employee is registered as a user){
+                send a mail to the employee about his successful registration.
+                Add the complanies
+            }
+        ii] Add admin
+            [Email]
+        
+        iii] Disable Employee 
+            [Email]
+        
+        iv] Employee List
+            [search in the whole database with the company name and then append to a list]
+
+
+
+5] Employee-Dashboard
+
+    Add Tasks
+    Show Pie Chart 
+    Show Bar Graph
+
+
+
+
+employee form
+and company form

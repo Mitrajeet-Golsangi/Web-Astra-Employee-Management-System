@@ -24,7 +24,7 @@ router.use(bodyParser.json());
 
 // Get the data of all the employees in database
 //[Done]
-router.get('/',(req,res,next)=>{
+router.get('/',isauth,(req,res,next)=>{
 
     Employees.find({})
     .populate('user')
@@ -46,47 +46,20 @@ router.post('/signup',(req,res,next)=>{
     const user = req.body.user;
     const company = req.body.company;
     const department_name = req.body.department_name;
-    const joining_date =Date(); 
+    const joining_date = Date(); 
+    const tasks= req.body.tasks;
 
-    // Not getting Logic
-
-    // Users.findById(user)
-    // .then((data)=>{
-    //     if(data){
-    //         const dataemail = data.email;
-    //         Employees.findOne({email : dataemail})
-    //         .then((employee)=>{
-    //             if(employee){
-    //                 res.statusCode = 400;
-    //                 res.setHeader('Content-Type', 'application/json');
-    //                 res.json({message :  `User with ${data.email} exists in the database, go to login section.`})
-    //                 console.log("User Exists Already !!!!")
-    //             }else{
-                   
-    //             }
-    //         })
-    //         .catch((err)=>next(err));
-
-    //     }else{
-    //         res.statusCode = 400;
-    //         res.setHeader('Content-Type', ' application/json');
-    //         res.json({message: ` User with id = ${user} does not exist !!!`});
-    //     }
-    // })
-    // .catch((err)=> next(err));
-
-    //direct method
-
-    Employees.create({user,company,department_name,joining_date})
-    .then((employee)=>{
-        console.log(employee);
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(employee);
+    Users.findById(user)
+    .then((user)=>{
+        if(user){
+            Employees.create(user,company,department_name,joining_date,tasks);
+        }else{
+            res.statusCode = 404;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({success:false,message: "User not found !!!\n Please create a user first"});
+        }
     },(err)=>next(err))
-    .catch((err)=>{
-        console.log(err);
-    });
+    .catch((err)=>next(err));
 });
 
 //longging in if not 
@@ -137,7 +110,7 @@ router.post('/login', (req, res, next) => {
 
 // Gettinng employee by id
 //[Done]
-router.get('/:Id',(req, res, next) => {
+router.get('/:Id',isauth,(req, res, next) => {
     Employees.findById(req.params.Id)
         .populate('user')
         .populate('company')
@@ -153,7 +126,7 @@ router.get('/:Id',(req, res, next) => {
 
 // completed successfully   
 //[Done]
-router.put('/:Id', (req, res, next) => {
+router.put('/:Id',isauth, (req, res, next) => {
     Users.findByIdAndUpdate(req.params.Id, req.body)
         .then((employee) => {
             // Users.save();
@@ -167,7 +140,7 @@ router.put('/:Id', (req, res, next) => {
 
 //[Done]
 // Delete all the employees database
-router.delete('/',(req,res,next)=>{
+router.delete('/',isauth,(req,res,next)=>{
     Employees.remove({})
     .then((val)=>{
         res.statusCode = 200;
@@ -180,7 +153,7 @@ router.delete('/',(req,res,next)=>{
 
 // Deleting a Employee using it's id
 //[Done]
-router.delete('/:Id', (req, res, next) => {
+router.delete('/:Id',isauth, (req, res, next) => {
     Employees.deleteOne({ "_id": req.params.Id })
         .then((resp) => {
             res.statusCode = 200;

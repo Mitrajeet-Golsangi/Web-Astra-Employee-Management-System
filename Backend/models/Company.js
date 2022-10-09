@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { stringify } = require('querystring');
 
-
+const Schema = mongoose.Schema;
 const CompanySchema = mongoose.Schema({
 	
 	
@@ -16,8 +16,9 @@ const CompanySchema = mongoose.Schema({
 	departments: [String],
 	//Point of contact (Person)
 	poc:{
-		type:mongoose.Types.ObjectId,
-		ref:'User'
+		type:[Schema.Types.ObjectId],
+		ref:'User',
+		required:true
 	}
 })
 

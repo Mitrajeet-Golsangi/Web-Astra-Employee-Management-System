@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.notification-div {
+    border-radius: 15px;
+    padding: 5%;
+    height: fit-content;
+    background-color: #93E6FB;
+    color: black;
+    font-weight: 400;
+    margin-top: 5%;
+}
+
+.notification-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    place-items: stretch;
+    height: 15%;
+    width: 20%;
+    position: fixed;
+    bottom: 2%;
+    left: 2%;
+}

@@ -57,8 +57,6 @@ router.post('/signup',(req,res,next)=>{
             .then((employee)=>{
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                
-                
                 res.json(employee);
 
             }, (err) => next(err))

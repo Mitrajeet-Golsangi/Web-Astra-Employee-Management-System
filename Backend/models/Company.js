@@ -6,7 +6,7 @@ const CompanySchema = mongoose.Schema({
 	departments: [String],
 	//Point of contact (Person)
 	poc: {
-		type: mongoose.Schema.Types.ObjectId,
+		type:[mongoose.Schema.Types.ObjectId],
 		ref: 'User',
 		required: true,
 	},

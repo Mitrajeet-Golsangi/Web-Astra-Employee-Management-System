@@ -55,17 +55,16 @@ router.post('/signup',(req,res,next)=>{
 			} else {
 				Companies.create({ name, departments, address, poc })
 					.then(
-						company => {
+						(company) => {
 							console.log(company);
 							res.statusCode = 200;
 							res.setHeader('Content-Type', 'application/json');
-
+                            const comp_id = company._id;
 							for (let i = 0; i < company.poc.length; i++) {
-								Users.findByIdAndUpdate(company.poc[i], { is_admin: true })
+								Users.findByIdAndUpdate(company.poc[i], { is_admin: true,company:comp_id})
 									.then(
-										val => {
-											res.statusCode = 200;
-											res.setHeader('Content-Type', 'application/json');
+										(val) => {
+                                            console.log(comp_id);
 											console.log(val);
 										},
 										err => next(err)
@@ -187,4 +186,27 @@ router.delete('/:Id', isauth,(req, res, next) => {
         .catch((err) => next(err));
 });
 
+
+router.post('/emplist',(req,res,next)=>{
+    
+    // Pass elist array from body (Instrudtion to frontend)
+    const elist = req.body.elist;
+    const admin_email =  req.session.email;
+
+    Users.findOne({email:admin_email})
+    .then((user)=>{
+        const admin_comp = user.company;
+        for(let i=0; i<elist.length; i++){
+    
+            Users.findOneAndUpdate({email:elist[i]},{company:admin_comp})
+            .then((user2)=>{
+                console.log(`Company name = ${admin_comp} added for email = ${user2.email}`); 
+            }, (err) => next(err))
+            .catch((err) => next(err));
+        }
+    },(err)=>next(err))
+    .catch((err) => next(err));
+
+
+})
 module.exports = router;

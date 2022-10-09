@@ -149,7 +149,7 @@ router.get('/:Id',isauth,(req, res, next) => {
 // completed successfully
 //[Done]   
 router.put('/:Id',isauth, (req, res, next) => {
-    companys.findByIdAndUpdate(req.params.Id, req.body)
+    Companies.findByIdAndUpdate(req.params.Id, req.body)
         .then((company) => {
             // companys.save();
             res.statusCode = 200;

@@ -4,6 +4,8 @@ const Users = require('../models/User');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const { info } = require('console');
+const { json } = require('body-parser');
+const { resolveSoa } = require('dns');
 const FileStore = require('session-file-store')(session);
 const router = express.Router();
 
@@ -124,15 +126,19 @@ router.get('/login',(req,res,next)=>{
 // completed successfully
 router.get('/logout', (req, res,next) => {
     if (req.session.email) {
+        const e = req.session.email;
       req.session.destroy();
       res.clearCookie('session-id');
       res.status = 200;
-      res.redirect('/');
+      console.log(`${e} Logged out !!!!`);
+      res.setHeader('Content-Type', 'application/json');
+      res.json({message : `${e} logged out !!!`});
     }
     else {
       var err = new Error('You are not logged in!');
       err.status = 403;
-      next(err);
+      res.setHeader('Content-Type', 'application/json');
+      res.json({err,message:"Your are not logged in"});
     }
   });
 

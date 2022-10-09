@@ -38,46 +38,50 @@ router.get('/',isauth,(req,res,next)=>{
 // Create an company entry in database with Uinque Email address only....
 //[Done]
 router.post('/signup',(req,res,next)=>{
-    
-    const email = req.body.email;
-    const name = req.body.name;
-    const type = req.body.type;
-    const departments = req.body.departments;
-    const address = req.body.address;
-    const poc = req.body.poc;
+	const name = req.body.name;
+	const departments = req.body.departments;
+	const address = req.body.address;
+	const poc = req.body.poc;
 
-    Companies.findOne({email})
-    .then((company)=>{
-        if(company){
-            res.statusCode = 400;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({message :  `company with ${email} exists in the database, go to login section.`})
-            console.log("company Exists Already !!!!")
-        }else{
-            Companies.create({email,name,type,departments,address,poc})
-            .then((company)=>{
-                console.log(company);
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                
-                for(let i=0;i<company.poc.length;i++){
-                    Users.findByIdAndUpdate(company.poc[i],{is_admin:true})
-                    .then((val)=>{
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        console.log(val);
-                    },(err)=>next(err))
-                    .catch((err) => console.log(err));
-                }
-                res.json(company);
-            },(err)=>next(err))
-            .catch((err)=>{
-                console.log(err);
-            });
-        }
-    })
-    .catch((err)=>next(err));
+	Companies.findOne({ name })
+		.then(company => {
+			if (company) {
+				res.statusCode = 400;
+				res.setHeader('Content-Type', 'application/json');
+				res.json({
+					message: `company with ${name} exists in the database, go to login section.`,
+				});
+				console.log('company Exists Already !!!!');
+			} else {
+				Companies.create({ name, departments, address, poc })
+					.then(
+						company => {
+							console.log(company);
+							res.statusCode = 200;
+							res.setHeader('Content-Type', 'application/json');
 
+							for (let i = 0; i < company.poc.length; i++) {
+								Users.findByIdAndUpdate(company.poc[i], { is_admin: true })
+									.then(
+										val => {
+											res.statusCode = 200;
+											res.setHeader('Content-Type', 'application/json');
+											console.log(val);
+										},
+										err => next(err)
+									)
+									.catch(err => console.log(err));
+							}
+							res.json(company);
+						},
+						err => next(err)
+					)
+					.catch(err => {
+						console.log(err);
+					});
+			}
+		})
+		.catch(err => next(err));
 });
 
 //longging in if not 

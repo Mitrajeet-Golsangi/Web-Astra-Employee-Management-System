@@ -1,25 +1,29 @@
 import React from 'react';
-import { GiSettingsKnobs, GiHamburgerMenu } from 'react-icons/gi';
+import { GiSettingsKnobs } from 'react-icons/gi';
 import { ImProfile } from 'react-icons/im';
 import { MdOutlineLogout } from 'react-icons/md';
 
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { logout } from '../utils/authentication';
+
+import Image from 'next/image';
+import logo from '../assets/logo.gif';
 
 const Navbar = () => {
 	const { data: session } = useSession();
+	const router = useRouter();
 
 	return (
 		<div className="px-5 p-3 flex w-full bg-blue-100 justify-between items-center">
-			{/* Control Button for Sidebar drawer */}
-			<label
-				htmlFor="drawer"
-				className="link navbar-link p-5 drawer-button"
-			>
-				<GiHamburgerMenu size={25} />
-			</label>
-
+			<div className="relative flex items-center gap-2">
+				<Image
+					src={logo}
+					width={80}
+					height={50}
+				/>
+				<a className="text-xl">Web Astra Developers</a>
+			</div>
 			<div className="flex items-center">
 				<div className="flex justify-end avatar mr-4">
 					<div className="w-1/3 rounded-full">
@@ -29,7 +33,7 @@ const Navbar = () => {
 				<div className="dropdown dropdown-left">
 					<label
 						tabIndex={0}
-						className="flex items-center gap-2 text-secondary m-1"
+						className="flex items-center gap-2 text-secondary m-1 cursor-pointer"
 					>
 						{session?.user.fname} {session?.user.lname}{' '}
 						<GiSettingsKnobs className="text-black" />
@@ -39,12 +43,11 @@ const Navbar = () => {
 						className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
 					>
 						<li>
-							<span className="flex items-center gap-4">
-								<Link href="/profile">
-									<>
-										<ImProfile /> Profile
-									</>
-								</Link>
+							<span
+								className="flex items-center gap-4"
+								onClick={() => router.push('/profile')}
+							>
+								<ImProfile /> Profile
 							</span>
 						</li>
 						<li>

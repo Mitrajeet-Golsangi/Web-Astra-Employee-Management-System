@@ -23,3 +23,8 @@
     bottom: 2%;
     left: 2%;
 }
+
+#nprogress .bar {
+    background: #463AA1 !important;
+    height: 3px !important;
+  }

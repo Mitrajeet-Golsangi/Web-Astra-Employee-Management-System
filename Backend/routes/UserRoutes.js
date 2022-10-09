@@ -42,7 +42,7 @@ router.post('/signup', (req, res, next) => {
     Users.findOne({ email: req.body.email })
         .then((user) => {
             if (user != null) {
-                res.statusCode = 403;
+                res.statusCode = 400;
                 res.setHeader('Content-Type', 'application/json');
                 res.json({ success: false, message: `User with emailid ${user.email} already exists` });
             } else {

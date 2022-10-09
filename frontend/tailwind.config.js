@@ -7,6 +7,10 @@ module.exports = {
 
 	theme: {
 		extend: {},
+		backgroundImage: {
+			employeeRegistration:
+				'url("https://images.pexels.com/photos/1532771/pexels-photo-1532771.jpeg?auto=compress&cs=tinysrgb&w=1920")',
+		},
 	},
 	plugins: [require('daisyui')],
 	daisyui: {

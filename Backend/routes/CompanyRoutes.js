@@ -3,6 +3,7 @@ const express = require('express');
 const Companies = require('../models/Company');
 const bodyParser = require('body-parser');
 const Users = require('../models/User');
+const { info } = require('console');
 
 // Creating a Router for Companies Operations
 const router = express.Router();
@@ -187,6 +188,15 @@ router.delete('/:Id', isauth,(req, res, next) => {
 });
 
 
+
+/*
+
+Instruction to the Frontend
+pass an array parameter called elist containing all the valid registered employees email.
+This function will update the Employee Users with company field.
+This function will only work if an admin is logged in else not !!
+*/
+ 
 router.post('/emplist',(req,res,next)=>{
     
     // Pass elist array from body (Instrudtion to frontend)
@@ -195,15 +205,24 @@ router.post('/emplist',(req,res,next)=>{
 
     Users.findOne({email:admin_email})
     .then((user)=>{
-        const admin_comp = user.company;
+        const admin_comp = user.company._id;
         for(let i=0; i<elist.length; i++){
     
             Users.findOneAndUpdate({email:elist[i]},{company:admin_comp})
             .then((user2)=>{
-                console.log(`Company name = ${admin_comp} added for email = ${user2.email}`); 
+                if(user2){
+                    console.log(`Company name = ${admin_comp} added for email = ${user2.email}`); 
+                }else{
+                    console.log(`User with email = ${elist[i]} does not exist in the database`);
+                }
             }, (err) => next(err))
             .catch((err) => next(err));
         }
+
+        console.log("All the employees in the elist have been updated ");
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({success:true});
     },(err)=>next(err))
     .catch((err) => next(err));
 

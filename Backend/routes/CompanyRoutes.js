@@ -4,7 +4,7 @@ const Companies = require('../models/Company');
 const bodyParser = require('body-parser');
 const Users = require('../models/User');
 const { info } = require('console');
-
+const Employees = require('../models/Employees');
 // Creating a Router for Companies Operations
 const router = express.Router();
 
@@ -205,11 +205,24 @@ router.post('/emplist',(req,res,next)=>{
 
     Users.findOne({email:admin_email})
     .then((user)=>{
-        const admin_comp = user.company._id;
+        const admin_comp = user.company;
         for(let i=0; i<elist.length; i++){
     
             Users.findOneAndUpdate({email:elist[i]},{company:admin_comp})
             .then((user2)=>{
+                let new_employee = new Employees({
+                    user:user2._id,
+                    company:user.company
+                });
+
+                new_employee.save(function(err,result){
+                    if (err){
+                        console.log(err);
+                    }
+                    else{
+                        console.log(result);
+                    }
+                });
                 if(user2){
                     console.log(`Company name = ${admin_comp} added for email = ${user2.email}`); 
                 }else{
@@ -226,6 +239,37 @@ router.post('/emplist',(req,res,next)=>{
     },(err)=>next(err))
     .catch((err) => next(err));
 
-
 })
+
+
+router.post('/compemplist',(req,res,next)=>{
+
+    const emplist = [];
+
+    Employees.find({company: req.body.company_id})
+    .populate('user')
+    .populate('company')
+    .then((users)=>{
+        res.statusCode = 200;
+        res.setHeader('Content-Type',   'application/json');
+        res.json(users);
+    })
+    .catch((err)=>next(err));
+})
+
+
+// router.post('/compemplist',(req,res,next)=>{
+
+//     Employees.find({company:req.params.company_id})
+//     .than((employees)=>{
+//         res.statusCode = 200;
+//         res.setHeader('Content-Type', 'application/json');
+//         res.json(employees);
+//     })
+//     .catch((err)=> next(err));
+// })
+
+
+
+
 module.exports = router;

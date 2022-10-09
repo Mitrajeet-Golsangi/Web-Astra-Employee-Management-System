@@ -26,15 +26,18 @@ router.use(bodyParser.json());
 
 //Get all the Users
 // completed successfully
-router.get('/',isauth, (req, res, next) => {
-    Users.find({})
-        .populate('company')
-        .then((users) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(users);
-        }, (err) => next(err))
-        .catch((err) => next(err));
+router.get('/', (req, res, next) => {
+	Users.find({})
+		.populate('company')
+		.then(
+			users => {
+				res.statusCode = 200;
+				res.setHeader('Content-Type', 'application/json');
+				res.json(users);
+			},
+			err => next(err)
+		)
+		.catch(err => next(err));
 });
 
 // Create a new user 

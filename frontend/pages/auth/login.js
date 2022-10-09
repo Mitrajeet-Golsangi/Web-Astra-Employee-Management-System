@@ -6,22 +6,29 @@ import CustomInput from '../../components/partials/Form Components/CustomInput';
 import BG from '../../assets/loginbg.jpg';
 import { HiOutlineMail } from 'react-icons/hi';
 import { MdOutlinePassword } from 'react-icons/md';
+import { AiOutlineLoading } from 'react-icons/ai';
 
-import axios from 'axios';
+import { signIn } from 'next-auth/react';
+
+import { notificationContext } from '../../context/notificationContext';
+import { useRouter } from 'next/router';
+import { login } from '../../utils/authentication';
 
 const Login = () => {
 	const [userInfo, setUserInfo] = React.useState({ email: '', password: '' });
 	const [loading, setLoading] = React.useState(false);
 
-	const submitHandler = e => {
+	const { setMessage } = React.useContext(notificationContext);
+
+	const router = useRouter();
+	const { callbackUrl } = router.query;
+
+	const submitHandler = async e => {
 		e.preventDefault();
 		setLoading(true);
-		console.log(process.env.BACKEND_URL);
-		axios
-			.post(`${process.env.BACKEND_URL}/user/login`, userInfo)
-			.then(res => console.log(res.data))
-			.catch(err => console.log(err))
-			.finally(setLoading(false));
+		await login(userInfo.email, userInfo.password, setMessage);
+
+		setLoading(false);
 	};
 
 	return (

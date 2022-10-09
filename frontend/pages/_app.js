@@ -1,15 +1,17 @@
 import '../styles/globals.css';
 
-import { store } from '../redux/store';
-import { Provider } from 'react-redux';
+import { NotificationContextProvider } from '../context/notificationContext';
+import { SessionProvider } from 'next-auth/react';
 
-function MyApp({ Component, pageProps }) {
-	const getLayout = Component.getLayout ?? (page => page);
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+	const getLayout = Component.getLayout || (page => page);
 
 	return (
-		<Provider store={store}>
-			{getLayout(<Component {...pageProps} />)};
-		</Provider>
+		<SessionProvider session={session}>
+			<NotificationContextProvider>
+				{getLayout(<Component {...pageProps} />)}
+			</NotificationContextProvider>
+		</SessionProvider>
 	);
 }
 

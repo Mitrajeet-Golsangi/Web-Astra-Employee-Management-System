@@ -126,6 +126,7 @@ router.get('/logout', (req, res,next) => {
     if (req.session.email) {
       req.session.destroy();
       res.clearCookie('session-id');
+      res.status = 200;
       res.redirect('/');
     }
     else {

@@ -194,37 +194,48 @@ router.delete('/:Id', isauth,(req, res, next) => {
 Instruction to the Frontend
 pass an array parameter called elist containing all the valid registered employees email.
 This function will update the Employee Users with company field.
-This function will only work if an admin is logged in else not !!
+This function will only work if an admin id passed in else not !!
 */
  
 router.post('/emplist',(req,res,next)=>{
     
     // Pass elist array from body (Instrudtion to frontend)
     const elist = req.body.elist;
-    const admin_email =  req.session.email;
 
-    Users.findOne({email:admin_email})
-    .then((user)=>{
-        const admin_comp = user.company._id;
-        for(let i=0; i<elist.length; i++){
-    
-            Users.findOneAndUpdate({email:elist[i]},{company:admin_comp})
-            .then((user2)=>{
-                if(user2){
-                    console.log(`Company name = ${admin_comp} added for email = ${user2.email}`); 
-                }else{
-                    console.log(`User with email = ${elist[i]} does not exist in the database`);
-                }
-            }, (err) => next(err))
-            .catch((err) => next(err));
-        }
+    Users.findById(req.body.admin_id)
+			.then(
+				user => {
+					const admin_comp = user.company._id;
+					for (let i = 0; i < elist.length; i++) {
+						Users.findOneAndUpdate({ email: elist[i] }, { company: admin_comp })
+							.then(
+								user2 => {
+									if (user2) {
+										console.log(
+											`Company name = ${admin_comp} added for email = ${user2.email}`
+										);
+									} else {
+										console.log(
+											`User with email = ${elist[i]} does not exist in the database`
+										);
+									}
+								},
+								err => next(err)
+							)
+							.catch(err => next(err));
+					}
 
-        console.log("All the employees in the elist have been updated ");
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({success:true});
-    },(err)=>next(err))
-    .catch((err) => next(err));
+					console.log('All the employees in the elist have been updated ');
+					res.statusCode = 200;
+					res.setHeader('Content-Type', 'application/json');
+					res.json({
+						success: true,
+						message: 'Added Employees Successfully !',
+					});
+				},
+				err => next(err)
+			)
+			.catch(err => next(err));
 
 
 })

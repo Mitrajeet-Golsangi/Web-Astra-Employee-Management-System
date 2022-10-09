@@ -1,20 +1,27 @@
 import React from 'react';
 import { MdClose, MdOutlineCategory } from 'react-icons/md';
-const TagsInput = ({ tags, setTags }) => {
+import { notificationContext } from '../../../context/notificationContext';
+const TagsInput = ({ tags, setTags, name, validator }) => {
+	const { setMessage } = React.useContext(notificationContext);
+
 	const addTags = e => {
 		if (e.key === 'Enter' && e.target.value !== '') {
-			setTags([...tags, e.target.value]);
+			validator
+				? validator(e)
+					? setTags([...tags, e.target.value])
+					: setMessage('Invalid Email ID !')
+				: setTags([...tags, e.target.value]);
 			e.target.value = '';
 		}
 	};
 
 	return (
-		<div>
+		<div className="w-full">
 			<label
-				htmlFor={`departments-input`}
+				htmlFor={`${name}-input`}
 				className="label"
 			>
-				Departments
+				{name}
 			</label>
 			<div className="flex items-center p-2">
 				<MdOutlineCategory />
@@ -23,7 +30,7 @@ const TagsInput = ({ tags, setTags }) => {
 						{tags.map((tag, index) => (
 							<li
 								key={index}
-								className="badge badge-lg badge-secondary mx-1"
+								className="badge badge-lg badge-secondary m-1"
 							>
 								<div className="flex items-center justify-between gap-2">
 									<span>{tag}</span>
@@ -41,9 +48,9 @@ const TagsInput = ({ tags, setTags }) => {
 						))}
 					</ul>
 					<input
-						id="departments-input"
+						id={`${name}-input`}
 						type="text"
-						placeholder="Press Enter to add Department"
+						placeholder={`Press Enter to add ${name}`}
 						onKeyUp={addTags}
 						className="w-full h-full mt-2"
 					/>

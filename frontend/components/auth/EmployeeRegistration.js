@@ -2,16 +2,15 @@ import React from 'react';
 import CustomInput from '../partials/Form Components/CustomInput';
 
 import {
-	MdOutlineDriveFileRenameOutline,
 	MdEmail,
-	MdOutlinePassword,
 	MdLocalPhone,
+	MdOutlineDriveFileRenameOutline,
+	MdOutlinePassword,
 } from 'react-icons/md';
 import { SiLastdotfm } from 'react-icons/si';
 
-import { notificationContext } from '../../context/notificationContext';
 import axios from 'axios';
-import { signIn } from 'next-auth/react';
+import { notificationContext } from '../../context/notificationContext';
 import { login } from '../../utils/authentication';
 
 const EmployeeRegistration = () => {
@@ -66,7 +65,7 @@ const EmployeeRegistration = () => {
 				onChange={({ target }) =>
 					setUserInfo({ ...userInfo, lname: target.value })
 				}
-				icon={<MdEmail />}
+				icon={<SiLastdotfm />}
 			/>
 			<CustomInput
 				bg="white"
@@ -78,7 +77,7 @@ const EmployeeRegistration = () => {
 				onChange={({ target }) =>
 					setUserInfo({ ...userInfo, email: target.value })
 				}
-				icon={<SiLastdotfm />}
+				icon={<MdEmail />}
 			/>
 			<CustomInput
 				bg="white"

@@ -176,6 +176,7 @@ const CompanyRegistration = () => {
 					<TagsInput
 						tags={departments}
 						setTags={setDepartments}
+						name="Departments"
 					/>
 				</div>
 			</form>

@@ -10,7 +10,7 @@ const Sidebar = props => {
 	const { data: session } = useSession();
 
 	return (
-		<div className="drawer drawer-end drawer-mobile">
+		<div className="drawer drawer-end lg:drawer-mobile">
 			<input
 				id="drawer"
 				type="checkbox"
@@ -34,7 +34,7 @@ const Sidebar = props => {
 							<li>
 								<span className="flex items-center">
 									<AiOutlineUserAdd />
-									<Link href="/">Add Employee</Link>
+									<Link href="/employee/add">Add Employee</Link>
 								</span>
 							</li>
 						</>

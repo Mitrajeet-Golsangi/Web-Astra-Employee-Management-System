@@ -1,13 +1,14 @@
 -----Backend----
 
 --Models--
+// u-Updated
 
-1] User        -[Done]
-2] Employee    -[Done]
-3] Company     -[Done]
-4] Task        -[Done]
-5] Company[u]
-6] 
+
+1] User            -[Done]
+2] Employee        -[Done]
+3] Company         -[Done]
+4] Task            -[Done]
+5] Company[u]      -[Done]
 
 --Routers--
 
@@ -21,10 +22,9 @@
 1] Temperory Authentication Done with Sessions
 2] Logical Authentication is Remaining
 
+--Security--
 
-
-
-
+1] Use Bycript Lib -[Pending]
 
 
 

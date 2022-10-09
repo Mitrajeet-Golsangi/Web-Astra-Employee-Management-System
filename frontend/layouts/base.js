@@ -1,14 +1,12 @@
-import React from "react";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import React from 'react';
+import Navbar from '../components/Navbar';
+import Sidebar from '../components/Sidebar';
 
 const BaseLayout = ({ children }) => {
 	return (
 		<>
-			<Sidebar>
-				<Navbar />
-				{children}
-			</Sidebar>
+			<Navbar />
+			<Sidebar>{children}</Sidebar>
 			{/* <Footer /> */}
 		</>
 	);

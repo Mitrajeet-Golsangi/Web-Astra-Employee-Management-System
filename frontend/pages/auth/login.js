@@ -3,15 +3,13 @@ import Link from 'next/link';
 import React from 'react';
 import CustomInput from '../../components/partials/Form Components/CustomInput';
 
-import BG from '../../assets/loginbg.jpg';
+import { AiOutlineLoading } from 'react-icons/ai';
 import { HiOutlineMail } from 'react-icons/hi';
 import { MdOutlinePassword } from 'react-icons/md';
-import { AiOutlineLoading } from 'react-icons/ai';
+import BG from '../../assets/loginbg.jpg';
 
-import { signIn } from 'next-auth/react';
-
-import { notificationContext } from '../../context/notificationContext';
 import { useRouter } from 'next/router';
+import { notificationContext } from '../../context/notificationContext';
 import { login } from '../../utils/authentication';
 
 const Login = () => {
@@ -21,7 +19,6 @@ const Login = () => {
 	const { setMessage } = React.useContext(notificationContext);
 
 	const router = useRouter();
-	const { callbackUrl } = router.query;
 
 	const submitHandler = async e => {
 		e.preventDefault();

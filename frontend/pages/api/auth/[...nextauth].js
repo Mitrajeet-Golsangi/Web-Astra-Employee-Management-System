@@ -38,7 +38,11 @@ export default NextAuth({
 			return token;
 		},
 		session: async ({ session, token }) => {
-			session.user = token.user;
+			const res = await axios.get(
+				`${process.env.BACKEND_URL}/user/${token.user._id}`
+			);
+
+			session.user = res.data.user ? res.data.user : token.user;
 			return session;
 		},
 	},

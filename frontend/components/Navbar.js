@@ -1,5 +1,5 @@
 import React from 'react';
-import { GiSettingsKnobs } from 'react-icons/gi';
+import { GiHamburgerMenu, GiSettingsKnobs } from 'react-icons/gi';
 import { ImProfile } from 'react-icons/im';
 import { MdOutlineLogout } from 'react-icons/md';
 
@@ -25,11 +25,21 @@ const Navbar = () => {
 				<a className="text-xl">Web Astra Developers</a>
 			</div>
 			<div className="flex items-center">
-				<div className="flex justify-end avatar mr-4">
-					<div className="w-1/3 rounded-full">
-						<img src="https://placeimg.com/192/192/people" />
+				{session?.user.image ? (
+					<div className="flex justify-end avatar mr-4">
+						<div className="w-1/3 rounded-full">
+							<img src={session?.user.image} />
+						</div>
 					</div>
-				</div>
+				) : (
+					<div className="flex justify-end avatar placeholder mr-4">
+						<div className="bg-secondary-focus text-base-100 rounded-full w-16">
+							<span className="text-xl">
+								{session?.user.fname[0].toUpperCase()}
+							</span>
+						</div>
+					</div>
+				)}
 				<div className="dropdown dropdown-left">
 					<label
 						tabIndex={0}
@@ -45,7 +55,7 @@ const Navbar = () => {
 						<li>
 							<span
 								className="flex items-center gap-4"
-								onClick={() => router.push('/profile')}
+								onClick={() => router.push(`/profile/${session?.user._id}`)}
 							>
 								<ImProfile /> Profile
 							</span>
@@ -60,6 +70,15 @@ const Navbar = () => {
 						</li>
 					</ul>
 				</div>
+				<label
+					htmlFor="drawer"
+					className="block lg:hidden cursor-pointer"
+				>
+					<GiHamburgerMenu
+						size={30}
+						className="mx-4"
+					/>
+				</label>
 			</div>
 		</div>
 	);

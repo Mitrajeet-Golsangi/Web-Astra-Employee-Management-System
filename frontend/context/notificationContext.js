@@ -19,16 +19,17 @@ export const NotificationContextProvider = props => {
 				{message ? (
 					<div
 						className="notification-div"
-						style={{ backgroundColor: '#93E6FB' }}
+						style={{ backgroundColor: '#E58B8B' }}
 					>
 						{message}
 					</div>
 				) : null}
-				{session !== null ? (
+				{/* //TODO: Add Email verification in user registration */}
+				{/* {session !== null ? (
 					session?.user.email_verified ? null : (
 						<div className="notification-div">Please Verify you Email</div>
 					)
-				) : null}
+				) : null} */}
 			</div>
 		</notificationContext.Provider>
 	);

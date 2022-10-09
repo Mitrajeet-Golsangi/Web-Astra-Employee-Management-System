@@ -27,7 +27,7 @@ export const login = async (email, password, setMessage) => {
 };
 
 export const logout = () => {
+	axios.get(`${process.env.BACKEND_URL}/user/logout`);
 	signOut({ redirect: false });
-
 	Router.push('/auth/login');
 };

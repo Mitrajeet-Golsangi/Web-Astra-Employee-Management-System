@@ -2,7 +2,8 @@
 const express = require('express');
 const Tasks = require('../models/Task');
 const bodyParser = require('body-parser');
-
+const Employees = require('../models/Employees');
+const Users = require('../models/User');
 
 // Creating a Router for Tasks Operations
 const router = express.Router();
@@ -36,7 +37,7 @@ router.get('/',isauth,(req,res,next)=>{
 
 // Create an task entry in database with Uinque Email address only....
 //[Done]
-router.post('/signup',(req,res,next)=>{
+router.post('/signup',isauth,(req,res,next)=>{
     
     const task_type = req.body.task_type;
     // const start_time = req.body.start_time;
@@ -48,6 +49,30 @@ router.post('/signup',(req,res,next)=>{
         console.log(task);
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
+        if(task){
+            const bemail = req.session.email;
+            Users.findOne({email:bemail})
+            .then((user)=>{
+                Employees.findOne({user:user})
+                .then((employee)=>{
+                    console.log(req.session.email);
+                    // console.log(employee.user.email);
+                    employee.tasks.push(task._id);
+                    employee.save()
+                    .then((resp)=>{
+                        // console.log(resp);
+                        res.json(resp);
+                    })
+                    .catch((err)=>(next(err)));
+            },(err) => next(err))
+            .catch((err)=>next(err));
+            
+
+            }, (err) => next(err))
+            .catch((err) => next(err));
+        }else{
+            console.log("Task not created somehow !!!! ");
+        }
         res.json(task);
     },(err)=>next(err))
     .catch((err)=>{

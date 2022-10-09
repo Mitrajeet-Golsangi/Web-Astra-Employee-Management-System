@@ -3,6 +3,7 @@ const express = require('express');
 const Employees = require('../models/Employees');
 const bodyParser = require('body-parser');
 const Users = require('../models/User');
+const employee = require('../models/Employees');
 
 
 
@@ -52,7 +53,16 @@ router.post('/signup',(req,res,next)=>{
     Users.findById(user)
     .then((user)=>{
         if(user){
-            Employees.create(user,company,department_name,joining_date,tasks);
+            Employees.create({user,company,department_name,joining_date,tasks})
+            .then((employee)=>{
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                
+                
+                res.json(employee);
+
+            }, (err) => next(err))
+            .catch((err) => next(err));
         }else{
             res.statusCode = 404;
             res.setHeader('Content-Type', 'application/json');

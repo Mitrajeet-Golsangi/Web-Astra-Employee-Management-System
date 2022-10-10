@@ -202,7 +202,7 @@ router.post('/emplist', (req, res, next) => {
 
     // Pass elist array from body (Instrudtion to frontend)
     const elist = req.body.elist;
-    const admin_email = req.session.email;
+    const admin_email = req.body.admin_email;
     Users.findOne({ email: admin_email })
         .then((user) => {
             const admin_comp = user.company;

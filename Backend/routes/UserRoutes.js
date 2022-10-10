@@ -190,7 +190,7 @@ router.get('/logout', (req, res, next) => {
 // Create the user with Id 
 // completed successfully
 router.get('/:Id', (req, res, next) => {
-    Users.findById({id:req.params.Id})
+    Users.findById({_id:req.params.Id})
         .then((user) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');

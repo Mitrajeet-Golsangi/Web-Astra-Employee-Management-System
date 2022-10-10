@@ -16,7 +16,8 @@ const isauth = (req, res, next) => {
         next();
     } else {
         // res.redirect('/companys/login');
-        res.end("You are not  logged in");
+        // res.end("You are not  logged in");
+        next();
     }
 }
 
@@ -62,7 +63,7 @@ router.post('/signup', (req, res, next) => {
                             console.log(company);
                             res.statusCode = 200;
                             res.setHeader('Content-Type', 'application/json');
-                            const comp_id = company._id;
+                            const comp_id = company.id;
                             for (let i = 0; i < company.poc.length; i++) {
                                 Users.findByIdAndUpdate(company.poc[i], { is_admin: true, company: comp_id })
                                     .then(
@@ -203,6 +204,7 @@ router.post('/emplist', (req, res, next) => {
     // Pass elist array from body (Instrudtion to frontend)
     const elist = req.body.elist;
     const admin_email = req.body.admin_email;
+    // const admin_email = req.session.email;
     Users.findOne({ email: admin_email })
         .then((user) => {
             const admin_comp = user.company;

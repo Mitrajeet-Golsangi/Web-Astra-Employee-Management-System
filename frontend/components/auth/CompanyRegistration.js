@@ -44,6 +44,7 @@ const CompanyRegistration = () => {
 			.post(`${process.env.BACKEND_URL}/user/signup`, userInfo)
 			.then(res => {
 				const user = res.data.user;
+				console.log(res.data);
 				axios
 					.post(`${process.env.BACKEND_URL}/comp/signup`, {
 						name: companyInfo.name,

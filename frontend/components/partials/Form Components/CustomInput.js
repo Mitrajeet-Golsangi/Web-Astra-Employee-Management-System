@@ -28,6 +28,8 @@ const CustomInput = (props) => {
 								: `border rounded-md w-full p-1 px-3 ml-3 text-gray-500 outline-none bg-transparent ${props.className}`
 						}
 						disabled={props.disabled}
+						min={props.min}
+						max={props.max}
 					/>
 				) : (
 					<input
@@ -44,6 +46,8 @@ const CustomInput = (props) => {
 								: `border rounded-md w-full p-1 px-3 ml-3 text-gray-500 outline-none bg-transparent ${props.className}`
 						}
 						disabled={props.disabled}
+						min={props.min}
+						max={props.max}
 					/>
 				)}
 			</div>

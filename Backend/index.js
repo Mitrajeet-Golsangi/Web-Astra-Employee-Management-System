@@ -26,7 +26,7 @@ dbConnect();
 
 const app = express();
 const server = http.createServer(app);
-
+const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
@@ -66,6 +66,6 @@ app.get('/', (req, res) => {
 	res.end('Hello there, Welcome !!!!!!');
 });
 
-server.listen(3000, () => {
+server.listen(port, () => {
 	console.log('listining on server 3000');
 });

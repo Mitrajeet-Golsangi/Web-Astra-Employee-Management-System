@@ -8,13 +8,16 @@ const Employees = require('../models/Employees');
 // Creating a Router for Companies Operations
 const router = express.Router();
 
+// mailing services
+const mail = require('../utils/mail');
 //Work in Progress Feature [Authantication]
 const isauth = (req, res, next) => {
     if (req.session.email) {
         next();
     } else {
         // res.redirect('/companys/login');
-        res.end("You are not  logged in");
+        // res.end("You are not  logged in");
+        next();
     }
 }
 
@@ -60,7 +63,7 @@ router.post('/signup', (req, res, next) => {
                             console.log(company);
                             res.statusCode = 200;
                             res.setHeader('Content-Type', 'application/json');
-                            const comp_id = company._id;
+                            const comp_id = company.id;
                             for (let i = 0; i < company.poc.length; i++) {
                                 Users.findByIdAndUpdate(company.poc[i], { is_admin: true, company: comp_id })
                                     .then(
@@ -201,6 +204,7 @@ router.post('/emplist', (req, res, next) => {
     // Pass elist array from body (Instrudtion to frontend)
     const elist = req.body.elist;
     const admin_email = req.body.admin_email;
+    // const admin_email = req.session.email;
     Users.findOne({ email: admin_email })
         .then((user) => {
             const admin_comp = user.company;
@@ -209,16 +213,20 @@ router.post('/emplist', (req, res, next) => {
                 Users.findOneAndUpdate({ email: elist[i] }, { company: admin_comp })
                     .then((user2) => {
 
-                        Employees.findOne({user:user2._id})
+                        Employees.findOne({ user: user2._id })
                             .then((employee) => {
                                 if (employee) {
-                                    console.log({ success: false, message: `The user with id ${employee._id} and name ${employee.user.name} is already registered with company ${employee.company}` })
+                                    console.log({ success: false, message: `The user with id ${employee._id} is already registered with company ${employee.company}` })
                                 } else {
-
+                                    
+                                    
+                                    // create new employee
                                     let new_employee = new Employees({
                                         user: user2._id,
                                         company: user.company
                                     });
+
+                                    // save new employee
 
                                     new_employee.save(function (err, result) {
                                         if (err) {
@@ -228,6 +236,7 @@ router.post('/emplist', (req, res, next) => {
                                             console.log(result);
                                         }
                                     });
+
                                     if (user2) {
                                         console.log(`Company name = ${admin_comp} added for email = ${user2.email}`);
                                     } else {
@@ -266,18 +275,6 @@ router.post('/compemplist', (req, res, next) => {
         })
         .catch((err) => next(err));
 })
-
-
-// router.post('/compemplist',(req,res,next)=>{
-
-//     Employees.find({company:req.params.company_id})
-//     .than((employees)=>{
-//         res.statusCode = 200;
-//         res.setHeader('Content-Type', 'application/json');
-//         res.json(employees);
-//     })
-//     .catch((err)=> next(err));
-// })
 
 
 

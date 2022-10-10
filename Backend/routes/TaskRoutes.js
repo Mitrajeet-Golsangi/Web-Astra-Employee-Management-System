@@ -41,14 +41,24 @@ router.post('/signup',isauth,(req,res,next)=>{
     
     const task_type = req.body.task_type;
     // const start_time = req.body.start_time;
-    const start_time = Date();
+    let d = new Date();
+    let day = d.getDate();
+    let month = d.getMonth();
+    if(day.length == 1){
+        day = "0"+day;
+    } 
+    if(month.length == 1){
+        month = "0"+month;
+    }
+
+    const start_time = day+":"+month+":"+d.getFullYear();
     const duration = req.body.duration;
     
     Tasks.create({task_type,start_time,duration})
     .then((task)=>{
         console.log(task);
         res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
+        // res.setHeader('Content-Type', 'application/json');
         if(task){
             const bemail = req.session.email;
             Users.findOne({email:bemail})

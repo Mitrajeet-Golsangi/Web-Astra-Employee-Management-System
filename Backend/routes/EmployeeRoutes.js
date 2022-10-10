@@ -3,7 +3,8 @@ const express = require('express');
 const Employees = require('../models/Employees');
 const bodyParser = require('body-parser');
 const Users = require('../models/User');
-const employee = require('../models/Employees');
+const Tasks = require('../models/Task');
+const { info } = require('console');
 
 
 
@@ -170,6 +171,64 @@ router.delete('/:Id',isauth, (req, res, next) => {
 
         }, (err) => next(err))
         .catch((err) => next(err));
+});
+
+
+/*
+Returns an Json Object with the tasks data of that employee for a week...
+Takes employee_id as an body:parameter..
+
+*/ 
+ 
+
+router.post('/tasksdata',(req,res,next)=>{
+
+    let w = [0,0,0,0,0,0,0];
+    let b = [0,0,0,0,0,0,0];
+    let m = [0,0,0,0,0,0,0 ];
+
+    let date_today = new Date();
+
+    let day = date_today.getDate();
+    day = parseInt(day);
+    Employees.findById(req.body.id)
+    .populate('tasks')
+    .then((employee)=>{
+        let t = employee.tasks;
+        let n = t.length;
+        
+        for(let i=0;i<n;i++){
+            let cd  =day-(t[i].start_time[0]+t[i].start_time[1]);
+            console.log(cd);
+            cd = parseInt(cd);
+            if(cd <7){
+                console.log(t[i].task_type);
+                if(t[i].task_type === "work"){
+                    w[cd] = w[cd]+t[i].duration;
+                    console.log(w[cd]);
+                }else if(t[i].task_type === "break"){
+                    b[cd] = b[cd]+t[i].duration;
+                    console.log(b[cd]); 
+                }else{
+                    m[cd] = m[cd]+t[i].duration;
+                    console.log(m[cd]);
+                }
+            }
+        }
+
+        myObj = new Object();
+
+        for(let i=0;i<7;i++){
+            myObj[i] = {
+                work:w[i],
+                break:b[i],
+                meeting:m[i]
+            }
+        }
+
+        res.json(myObj);
+    })
+    .catch(err=>next(err));
 });
 
 

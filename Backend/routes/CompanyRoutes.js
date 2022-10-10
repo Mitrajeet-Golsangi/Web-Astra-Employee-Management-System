@@ -8,6 +8,8 @@ const Employees = require('../models/Employees');
 // Creating a Router for Companies Operations
 const router = express.Router();
 
+// mailing services
+const mail = require('../utils/mail');
 //Work in Progress Feature [Authantication]
 const isauth = (req, res, next) => {
     if (req.session.email) {
@@ -209,16 +211,20 @@ router.post('/emplist', (req, res, next) => {
                 Users.findOneAndUpdate({ email: elist[i] }, { company: admin_comp })
                     .then((user2) => {
 
-                        Employees.findOne({user:user2._id})
+                        Employees.findOne({ user: user2._id })
                             .then((employee) => {
                                 if (employee) {
-                                    console.log({ success: false, message: `The user with id ${employee._id} and name ${employee.user.name} is already registered with company ${employee.company}` })
+                                    console.log({ success: false, message: `The user with id ${employee._id} is already registered with company ${employee.company}` })
                                 } else {
-
+                                    
+                                    
+                                    // create new employee
                                     let new_employee = new Employees({
                                         user: user2._id,
                                         company: user.company
                                     });
+
+                                    // save new employee
 
                                     new_employee.save(function (err, result) {
                                         if (err) {
@@ -228,6 +234,7 @@ router.post('/emplist', (req, res, next) => {
                                             console.log(result);
                                         }
                                     });
+
                                     if (user2) {
                                         console.log(`Company name = ${admin_comp} added for email = ${user2.email}`);
                                     } else {
@@ -266,18 +273,6 @@ router.post('/compemplist', (req, res, next) => {
         })
         .catch((err) => next(err));
 })
-
-
-// router.post('/compemplist',(req,res,next)=>{
-
-//     Employees.find({company:req.params.company_id})
-//     .than((employees)=>{
-//         res.statusCode = 200;
-//         res.setHeader('Content-Type', 'application/json');
-//         res.json(employees);
-//     })
-//     .catch((err)=> next(err));
-// })
 
 
 

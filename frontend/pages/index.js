@@ -1,18 +1,38 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import BaseLayout from '../layouts/base';
-import { isEmpty } from '../utils/helpers';
 
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import AdminDashboard from '../components/admin/AdminDashboard';
+import EmployeeDashboard from '../components/employee/EmployeeDashboard';
 
-const Home = () => {
+const Home = props => {
 	const { data: session } = useSession();
 
-	return session?.user.is_admin ? <AdminDashboard /> : <div>Index</div>;
+	return session?.user.is_admin ? (
+		<AdminDashboard employees={props.employees} />
+	) : (
+		<EmployeeDashboard />
+	);
 };
 
 Home.getLayout = page => <BaseLayout>{page}</BaseLayout>;
+
+export const getServerSideProps = async () => {
+	const session = await getSession();
+	if (session?.user.is_admin) {
+		const res = await fetch(`${process.env.BACKEND_URL}/user`);
+		const data = await res.json();
+
+		return {
+			props: {
+				employees: data,
+			},
+		};
+	} else {
+		return {
+			props: {},
+		};
+	}
+};
 
 export default Home;

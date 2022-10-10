@@ -4,11 +4,27 @@ import BaseLayout from '../../layouts/base';
 import TagsInput from '../../components/partials/Form Components/TagsInput';
 import { isEmail } from '../../utils/helpers';
 import { MdAdd } from 'react-icons/md';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import { notificationContext } from '../../context/notificationContext';
 
 const AddEmployee = () => {
 	const [emails, setEmails] = React.useState([]);
+	const { data: session } = useSession();
+	const { setMessage } = React.useContext(notificationContext);
 
-	const submitHandler = () => {};
+	const submitHandler = () => {
+		axios
+			.post(`${process.env.BACKEND_URL}/comp/emplist`, {
+				elist: emails,
+				admin_email: session?.user.email,
+			})
+			.then(res => {
+				setMessage('Employees Added Successfully !');
+				setEmails([]);
+			})
+			.catch(err => setMessage(err.message));
+	};
 
 	return (
 		<div className="p-5 flex flex-col items-center justify-center w-full">

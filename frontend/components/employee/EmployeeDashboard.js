@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import BarChart from './BarChart';
-import PieChart from './Piechart';
+// import PieChart from './Piechart';
 
 const getBarData = () => {
 	let barChartData = [];
@@ -45,7 +45,7 @@ const EmployeeDashboard = ({ id }) => {
 			<div className="lg:col-span-2 text-4xl font-light text-primary place-self-start">
 				Tasks Done in Last 2 Days
 			</div>
-			<div className="relative w-1/2 lg:w-2/3 flex flex-col items-center gap-y-10 p-10">
+		{*/ <div className="relative w-1/2 lg:w-2/3 flex flex-col items-center gap-y-10 p-10">
 				<PieChart
 					labels={['Break', 'Work', 'Meeting']}
 					data={[400, 400, 200]}
@@ -60,7 +60,7 @@ const EmployeeDashboard = ({ id }) => {
 					data={[200, 400, 400]}
 				/>
 				<div className="text-3xl font-thin text-secondary uppercase">Today</div>
-			</div>
+			</div> /*}
 			<BarChart
 				labels={['Working', 'Not-Working', 'Meeting']}
 				data={barData}

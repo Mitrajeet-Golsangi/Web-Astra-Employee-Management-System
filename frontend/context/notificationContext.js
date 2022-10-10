@@ -19,7 +19,11 @@ export const NotificationContextProvider = props => {
 				{message ? (
 					<div
 						className="notification-div"
-						style={{ backgroundColor: '#E58B8B' }}
+						style={{
+							backgroundColor: message.toLowerCase().includes('successfully')
+								? '#93E6FB'
+								: '#E58B8B',
+						}}
 					>
 						{message}
 					</div>

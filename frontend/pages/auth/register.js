@@ -32,7 +32,7 @@ const Register = () => {
 	const router = useRouter();
 
 	return (
-		<div className="h-screen flex flex-col items-center justify-start pt-20 bg-employeeRegistration bg-cover bg-no-repeat">
+		<div className="h-screen flex flex-col items-center justify-start pt-10 bg-employeeRegistration bg-cover bg-no-repeat">
 			<div className="flex items-center justify-between text-4xl font-thin mb-4">
 				<BsArrowLeft
 					onClick={() => (userType == null ? router.back() : setUserType(null))}

@@ -28,7 +28,6 @@ const PieChart = props => {
 			},
 		],
 	};
-	console.log(props);
 	return <Doughnut data={data} />;
 };
 

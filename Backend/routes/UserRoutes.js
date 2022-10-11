@@ -162,8 +162,8 @@ router.post('/login', async (req, res, next) => {
 // completed successfully
 router.get('/login', (req, res, next) => {
     res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/html');
-    res.end("Bro you need to login post");
+    res.setHeader('Content-Type', 'application/json');
+		res.json({ message: 'Bro you need to login post' });
 })
 
 

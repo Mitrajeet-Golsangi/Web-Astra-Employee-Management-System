@@ -75,9 +75,9 @@ router.post('/signup',(req,res,next)=>{
 //[Done]
 router.post('/login', (req, res, next) => {
     if(req.session.email){
-        res.setHeader('Content-Type', 'text/html');
+        res.setHeader('Content-Type', 'application/json');
         console.log("Your are already logged in!!") ;
-        res.redirect('/');
+        res.json({ message: 'Already Logged In !' });
     }
     Users.findOne({ email: req.body.email })
         .then((user) => {

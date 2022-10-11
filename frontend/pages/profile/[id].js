@@ -1,4 +1,4 @@
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import React from 'react';
 import AvatarComponent, {
 	ChangeAvatarModal,
@@ -17,21 +17,21 @@ import { SiLastdotfm } from 'react-icons/si';
 
 import { notificationContext } from '../../context/notificationContext';
 import { reloadSession } from '../../utils/helpers';
+import CustomRadio from '../../components/partials/Form Components/CustomRadio';
 
-const Profile = () => {
+const Profile = ({ user }) => {
 	const { data: session } = useSession();
-	const [userInfo, setUserInfo] = React.useState(null);
 	const [img, setImg] = React.useState(session?.user.img_url);
+	const [userInfo, setUserInfo] = React.useState(user);
 	const { setMessage } = React.useContext(notificationContext);
-
-	React.useEffect(() => setUserInfo(session?.user), []);
 
 	const submitHandler = () => {
 		axios
 			.put(`${process.env.BACKEND_URL}/user/${session?.user._id}`, {
-				fname: userInfo.fname,
-				lname: userInfo.lname,
-				contact: userInfo.contact,
+				fname: userInfo?.fname,
+				lname: userInfo?.lname,
+				contact: userInfo?.contact,
+				image: img,
 			})
 			.then(res => {
 				setMessage(res.data.message);
@@ -50,6 +50,14 @@ const Profile = () => {
 			<div className="mt-10">
 				<AvatarComponent src={img} />
 				<ChangeAvatarModal setSrc={setImg} />
+				<div className="flex flex-col justify-center mt-5">
+					<div className="text-secondary uppercase">Company</div>
+					<div>{userInfo?.company.name}</div>
+					<div className="divider"></div>
+					<div className="text-secondary uppercase">Address</div>
+					<div>{userInfo?.company.address}</div>
+					<div className="divider"></div>
+				</div>
 			</div>
 
 			<form className="w-full lg:col-span-3">
@@ -88,7 +96,7 @@ const Profile = () => {
 					}
 					icon={<MdEmail />}
 					disabled={true}
-					className="bg-slate-200"
+					className="bg-slate-100"
 				/>
 				<CustomInput
 					bg="white"
@@ -115,4 +123,16 @@ const Profile = () => {
 };
 
 Profile.getLayout = page => <BaseLayout>{page}</BaseLayout>;
+
+export const getServerSideProps = async ctx => {
+	const session = await getSession(ctx);
+	console.log(session?.user);
+
+	return {
+		props: {
+			user: session?.user,
+		},
+	};
+};
+
 export default Profile;

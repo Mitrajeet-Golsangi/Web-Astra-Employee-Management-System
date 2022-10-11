@@ -24,8 +24,14 @@ const CustomInput = (props) => {
 						id={`${props.name}-input`}
 						className={
 							props.bg
-								? `border rounded-md w-full p-1 px-3 ml-3 text-gray-500 outline-none bg-${props.bg} ${props.className}`
-								: `border rounded-md w-full p-1 px-3 ml-3 text-gray-500 outline-none bg-transparent ${props.className}`
+								? `border rounded-md w-full p-1 px-3 ml-3 text-gray-500 outline-none bg-${
+										props.bg
+								  } ${props.className} ${
+										props.disabled ? 'bg-slate-200' : null
+								  }`
+								: `border rounded-md w-full p-1 px-3 ml-3 text-gray-500 outline-none bg-transparent ${
+										props.className
+								  } ${props.disabled ? 'bg-slate-200' : null}`
 						}
 						disabled={props.disabled}
 						min={props.min}
@@ -42,8 +48,14 @@ const CustomInput = (props) => {
 						id={`${props.name}-input`}
 						className={
 							props.bg
-								? `border rounded-md w-full p-1 px-3 ml-3 text-gray-500 outline-none bg-${props.bg} ${props.className}`
-								: `border rounded-md w-full p-1 px-3 ml-3 text-gray-500 outline-none bg-transparent ${props.className}`
+								? `border rounded-md w-full p-1 px-3 ml-3 text-gray-500 outline-none bg-${
+										props.bg
+								  } ${props.className} ${
+										props.disabled ? 'bg-slate-200' : null
+								  }`
+								: `border rounded-md w-full p-1 px-3 ml-3 text-gray-500 outline-none bg-transparent ${
+										props.className
+								  } ${props.disabled ? 'bg-slate-200' : null}`
 						}
 						disabled={props.disabled}
 						min={props.min}

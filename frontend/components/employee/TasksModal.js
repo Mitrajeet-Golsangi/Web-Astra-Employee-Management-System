@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 
 const TasksModal = () => {
 	const router = useRouter();
+	const { data: session } = useSession();
 
 	const [maxVal, setMaxVal] = React.useState(null);
 	const [taskInfo, setTaskInfo] = React.useState({
@@ -17,15 +18,18 @@ const TasksModal = () => {
 		start_time: '',
 		duration: '',
 		task_type: '',
-		id: null,
+		id: session?.user._id,
 	});
 	const { setMessage } = React.useContext(notificationContext);
-	const { data: session } = useSession();
 
-	React.useEffect(() => setMaxVal(new Date().toISOString().split('.')[0]), []);
+	React.useEffect(() => {
+		setMaxVal(new Date().toISOString().split('.')[0]),
+			setTaskInfo({ ...taskInfo, id: session?.user._id });
+	}, [session]);
 
 	const submitHandler = () => {
-		setTaskInfo({ ...taskInfo, id: session?.user._id });
+		console.log(taskInfo);
+
 		axios
 			.post(`${process.env.BACKEND_URL}/task/create`, taskInfo)
 			.then(_ => {
@@ -35,7 +39,7 @@ const TasksModal = () => {
 					start_time: '',
 					duration: '',
 					task_type: '',
-					id: null,
+					id: session?.user._id,
 				});
 				router.push('/');
 			})
@@ -147,6 +151,6 @@ const TasksModal = () => {
 			</label>
 		</>
 	);
-};;
+};;;;;
 
 export default TasksModal;

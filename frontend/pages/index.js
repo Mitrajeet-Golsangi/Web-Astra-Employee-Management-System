@@ -8,22 +8,9 @@ import axios from 'axios';
 
 const Home = props => {
 	const { data: session } = useSession();
-	const [employees, setEmployees] = React.useState();
 
-	React.useEffect(() => {
-		if (session) {
-			session?.user.is_admin
-				? axios
-						.get(
-							`${process.env.BACKEND_URL}/comp/compemplist/${session.user.company}`
-						)
-						.then(res => setEmployees(res.data))
-						.catch(err => console.log(err))
-				: null;
-		}
-	}, [session]);
 	return session?.user.is_admin ? (
-		<AdminDashboard employees={employees} />
+		<AdminDashboard employees={props.employees} />
 	) : (
 		<EmployeeDashboard
 			barData={props.barData}
@@ -38,8 +25,9 @@ export const getServerSideProps = async context => {
 	const session = await getSession(context);
 	let barData = [];
 	let pieData = [];
+	let employees = [];
 
-	if (!session.user.is_admin) {
+	if (session?.user.is_admin === false) {
 		try {
 			const res = await fetch(`${process.env.BACKEND_URL}/emp/tasksdata`, {
 				method: 'post',
@@ -81,9 +69,22 @@ export const getServerSideProps = async context => {
 		} catch (err) {
 			console.log('--------------------------------------\n', err);
 		}
+	} else {
+		try {
+			const res = await fetch(
+				`${process.env.BACKEND_URL}/comp/compemplist/${session.user.company}`
+			);
+			const data = await res.json();
+
+			employees = data;
+		} catch (err) {
+			console.log('--------------------------------------\n', err);
+		}
 	}
 
-	return { props: { barData: barData, pieData: pieData } };
+	return {
+		props: { barData: barData, pieData: pieData, employees: employees },
+	};
 };
 
 export default Home;

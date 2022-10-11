@@ -10,6 +10,10 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
+ChartJS.defaults.font = {
+	family: 'Segoe UI',
+};
+
 ChartJS.register(
 	CategoryScale,
 	LinearScale,

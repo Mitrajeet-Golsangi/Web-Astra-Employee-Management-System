@@ -23,7 +23,7 @@ const TasksModal = () => {
 		axios
 			.post(`${process.env.BACKEND_URL}/task/create`, taskInfo)
 			.then(_ => setMessage('Task Added Successfully !'))
-			.catch(err => setMEssage(err.message));
+			.catch(err => setMessage(err.message));
 	};
 
 	return (

@@ -1,55 +1,56 @@
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import React from 'react';
+import { notificationContext } from '../../context/notificationContext';
 import BarChart from './BarChart';
-// import PieChart from './Piechart';
-
-const getBarData = () => {
-	let barChartData = [];
-	let date = new Date();
-
-	for (let i = 0; i < 7; i++) {
-		var dateOffset = 24 * 60 * 60 * 1000 * i;
-		date.setTime(date.getTime() - dateOffset);
-		console.log(date.toISOString());
-	}
-};
+import PieChart from './Piechart';
 
 const EmployeeDashboard = ({ id }) => {
 	const { data: session } = useSession();
-	const [work, setWork] = React.useState([]);
-	const [meeting, setMeeting] = React.useState([]);
-	const [leisure, setLeisure] = React.useState([]);
 	const [barData, setBarData] = React.useState([]);
+	const { setMessage } = React.useContext(notificationContext);
 
-	React.useEffect(() => {
+	const getBarData = () => {
+		const colors = [
+			'rgb(201, 68, 44)',
+			'rgb(201, 170, 44)',
+			'rgb(133, 201, 44)',
+			'rgb(44, 201, 149)',
+			'rgb(44, 104, 201)',
+			'rgb(133, 44, 201)',
+			'rgb(201, 44, 183)',
+		];
+
 		if (session) {
-			console.log(id ? id : session.user._id);
-			try {
-				axios
-					.post(`${process.env.BACKEND_URL}/emp/tasksdata`, {
-						id: id ? id : session.user._id,
-					})
-					.then(res => {
-						console.log(res.data);
-						res.data.forEach(t => {
-							setWork([...work, t.work]);
-							setLeisure([...leisure, t.break]);
-							setMeeting([...meeting, t.meeting]);
-							setBarData(getBarData());
-						});
-						console.log(work);
+			axios
+				.post(`${process.env.BACKEND_URL}/emp/tasksdata`, {
+					id: id ? id : session?.user._id,
+				})
+				.then(res => {
+					res.data.data.forEach((t, i) => {
+						let date = new Date();
+						date.setDate(date.getDate() - 1);
+
+						setBarData(bd => [
+							...bd,
+							{
+								label: date.toISOString().split('T')[0],
+								data: [t.work, t.leisure, t.meeting],
+								backgroundColor: colors[i],
+							},
+						]);
 					});
-			} catch (_) {}
+				})
+				.catch(err => setMessage(`${err.message} : Error Fetching Data !`));
 		}
-	}, [session]);
+	};
 
 	return (
 		<div className="p-5 grid grid-cols-1 grid-rows-auto lg:grid-cols-2 place-items-center">
 			<div className="lg:col-span-2 text-4xl font-light text-primary place-self-start">
 				Tasks Done in Last 2 Days
 			</div>
-			{/* <div className="relative w-1/2 lg:w-2/3 flex flex-col items-center gap-y-10 p-10">
+			<div className="relative w-1/2 lg:w-2/3 flex flex-col items-center gap-y-10 p-10">
 				<PieChart
 					labels={['Break', 'Work', 'Meeting']}
 					data={[400, 400, 200]}
@@ -64,7 +65,13 @@ const EmployeeDashboard = ({ id }) => {
 					data={[200, 400, 400]}
 				/>
 				<div className="text-3xl font-thin text-secondary uppercase">Today</div>
-			</div> */}
+			</div>
+			<button
+				className="btn btn-outline btn-secondary"
+				onClick={() => getBarData()}
+			>
+				Get Data
+			</button>
 			<BarChart
 				labels={['Working', 'Not-Working', 'Meeting']}
 				data={barData}

@@ -22,6 +22,8 @@ const TaskRouter = require('./routes/TaskRoutes');
 
 const dbConnect = require('./utils/dbConnect');
 
+require('dotenv').config();
+
 dbConnect();
 
 const app = express();
@@ -42,6 +44,8 @@ app.use(
 		store: new FileStore(),
 	})
 );
+
+const port = process.env.PORT || 3000;
 
 app.use(function (req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
@@ -66,6 +70,6 @@ app.get('/', (req, res) => {
 	res.end('Hello there, Welcome !!!!!!');
 });
 
-server.listen(3000, () => {
+server.listen(port, () => {
 	console.log('listining on server 3000');
 });

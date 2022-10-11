@@ -23,21 +23,25 @@ const EmployeeDashboard = ({ id }) => {
 	const [barData, setBarData] = React.useState([]);
 
 	React.useEffect(() => {
-		if (session)
-			axios
-				.post(`${process.env.BACKEND_URL}/emp/tasksdata`, {
-					id: id ? id : session.user._id,
-				})
-				.then(res => {
-					console.log(res.data);
-					res.data.forEach(t => {
-						setWork([...work, t.work]);
-						setLeisure([...leisure, t.break]);
-						setMeeting([...meeting, t.meeting]);
-						setBarData(getBarData());
+		if (session) {
+			console.log(id ? id : session.user._id);
+			try {
+				axios
+					.post(`${process.env.BACKEND_URL}/emp/tasksdata`, {
+						id: id ? id : session.user._id,
+					})
+					.then(res => {
+						console.log(res.data);
+						res.data.forEach(t => {
+							setWork([...work, t.work]);
+							setLeisure([...leisure, t.break]);
+							setMeeting([...meeting, t.meeting]);
+							setBarData(getBarData());
+						});
+						console.log(work);
 					});
-					console.log(work);
-				});
+			} catch (_) {}
+		}
 	}, [session]);
 
 	return (

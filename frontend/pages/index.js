@@ -12,12 +12,15 @@ const Home = props => {
 	const [taskData, setTaskData] = React.useState();
 
 	React.useEffect(() => {
-		if (session)
-			axios
-				.get(
-					`${process.env.BACKEND_URL}/comp/compemplist/${session.user.company}`
-				)
-				.then(res => setEmployees(res.data));
+		if (session) {
+			try {
+				axios
+					.get(
+						`${process.env.BACKEND_URL}/comp/compemplist/${session.user.company}`
+					)
+					.then(res => setEmployees(res.data));
+			} catch (_) {}
+		}
 	}, [session]);
 	return session?.user.is_admin ? (
 		<AdminDashboard employees={employees} />

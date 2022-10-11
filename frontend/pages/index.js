@@ -9,17 +9,17 @@ import axios from 'axios';
 const Home = props => {
 	const { data: session } = useSession();
 	const [employees, setEmployees] = React.useState();
-	const [taskData, setTaskData] = React.useState();
 
 	React.useEffect(() => {
 		if (session) {
-			try {
-				axios
-					.get(
-						`${process.env.BACKEND_URL}/comp/compemplist/${session.user.company}`
-					)
-					.then(res => setEmployees(res.data));
-			} catch (_) {}
+			session?.user.is_admin
+				? axios
+						.get(
+							`${process.env.BACKEND_URL}/comp/compemplist/${session.user.company}`
+						)
+						.then(res => setEmployees(res.data))
+						.catch(err => console.log(err))
+				: null;
 		}
 	}, [session]);
 	return session?.user.is_admin ? (

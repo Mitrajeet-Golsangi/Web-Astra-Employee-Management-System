@@ -21,7 +21,7 @@ import CustomRadio from '../../components/partials/Form Components/CustomRadio';
 
 const Profile = ({ user }) => {
 	const { data: session } = useSession();
-	const [img, setImg] = React.useState(session?.user.img_url);
+	const [img, setImg] = React.useState(user.image);
 	const [userInfo, setUserInfo] = React.useState(user);
 	const { setMessage } = React.useContext(notificationContext);
 

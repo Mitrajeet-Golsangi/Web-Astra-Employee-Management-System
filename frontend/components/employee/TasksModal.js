@@ -11,15 +11,18 @@ import { useRouter } from 'next/router';
 const TasksModal = () => {
 	const router = useRouter();
 
+	const [maxVal, setMaxVal] = React.useState(null);
 	const [taskInfo, setTaskInfo] = React.useState({
-		description: null,
-		start_time: null,
-		duration: null,
-		task_type: null,
+		description: '',
+		start_time: '',
+		duration: '',
+		task_type: '',
 		id: null,
 	});
 	const { setMessage } = React.useContext(notificationContext);
 	const { data: session } = useSession();
+
+	React.useEffect(() => setMaxVal(new Date().toISOString().split('.')[0]), []);
 
 	const submitHandler = () => {
 		setTaskInfo({ ...taskInfo, id: session?.user._id });
@@ -28,6 +31,13 @@ const TasksModal = () => {
 			.post(`${process.env.BACKEND_URL}/task/create`, taskInfo)
 			.then(_ => {
 				setMessage('Task Added Successfully !');
+				setTaskInfo({
+					description: '',
+					start_time: '',
+					duration: '',
+					task_type: '',
+					id: null,
+				});
 				router.push('/');
 			})
 			.catch(err => setMessage(err.message));
@@ -114,7 +124,7 @@ const TasksModal = () => {
 							onChange={({ target }) =>
 								setTaskInfo({ ...taskInfo, start_time: target.value })
 							}
-							max={new Date().toISOString().split('.')[0]}
+							max={maxVal}
 						/>
 						<CustomInput
 							value={taskInfo.duration}

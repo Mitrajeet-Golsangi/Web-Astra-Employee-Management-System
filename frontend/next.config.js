@@ -5,6 +5,7 @@ const nextConfig = {
 	env: {
 		BACKEND_URL: process.env.BACKEND_URL,
 	},
+	images: { domains: ['i.imgur.com'] },
 };
 
 module.exports = nextConfig;

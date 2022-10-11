@@ -22,6 +22,19 @@ Home.getLayout = page => <BaseLayout>{page}</BaseLayout>;
 
 export const getServerSideProps = async context => {
 	const session = await getSession(context);
+	const emp = await fetch(
+		`${process.env.BACKEND_URL}/emp/${session?.user._id}`
+	);
+	const emp_data = await emp.json();
+	if (emp_data.disabled)
+		return {
+			redirect: {
+				permanent: false,
+				destination: '/auth/login?message=Access%20Denied%20!',
+			},
+			props: {},
+		};
+	
 	let barData = [];
 	let pieData = [];
 	let employees = [];

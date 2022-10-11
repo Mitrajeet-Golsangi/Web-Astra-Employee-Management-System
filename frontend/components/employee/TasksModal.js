@@ -23,6 +23,7 @@ const TasksModal = () => {
 
 	const submitHandler = () => {
 		setTaskInfo({ ...taskInfo, id: session?.user._id });
+		setTaskInfo({ ...taskInfo, start_tm });
 		axios
 			.post(`${process.env.BACKEND_URL}/task/create`, taskInfo)
 			.then(_ => {

@@ -7,7 +7,6 @@ import BarChart from './BarChart';
 import EmployeePieChart from './EmployeePieChart';
 
 const EmployeeDashboard = props => {
-	console.log(props);
 	return (
 		<div className="p-5 grid grid-cols-1 grid-rows-auto lg:grid-cols-2 place-items-center">
 			<div className="lg:col-span-2 text-4xl font-light text-primary place-self-start">

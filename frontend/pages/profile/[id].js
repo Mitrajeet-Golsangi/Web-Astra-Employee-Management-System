@@ -126,7 +126,6 @@ Profile.getLayout = page => <BaseLayout>{page}</BaseLayout>;
 
 export const getServerSideProps = async ctx => {
 	const session = await getSession(ctx);
-	console.log(session?.user);
 
 	return {
 		props: {

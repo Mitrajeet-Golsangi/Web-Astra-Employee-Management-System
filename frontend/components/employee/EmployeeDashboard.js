@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import React from 'react';
 import { notificationContext } from '../../context/notificationContext';
 import BarChart from './BarChart';
-import PieChart from './Piechart';
+import EmployeePieChart from './EmployeePieChart';
 
 const EmployeeDashboard = ({ id }) => {
 	const { data: session } = useSession();
@@ -51,7 +51,7 @@ const EmployeeDashboard = ({ id }) => {
 				Tasks Done in Last 2 Days
 			</div>
 			<div className="relative w-1/2 lg:w-2/3 flex flex-col items-center gap-y-10 p-10">
-				<PieChart
+				<EmployeePieChart
 					labels={['Break', 'Work', 'Meeting']}
 					data={[400, 400, 200]}
 				/>
@@ -60,7 +60,7 @@ const EmployeeDashboard = ({ id }) => {
 				</div>
 			</div>
 			<div className="relative w-1/2 lg:w-2/3 flex flex-col items-center gap-y-10 p-10">
-				<PieChart
+				<EmployeePieChart
 					labels={['Break', 'Work', 'Meeting']}
 					data={[200, 400, 400]}
 				/>

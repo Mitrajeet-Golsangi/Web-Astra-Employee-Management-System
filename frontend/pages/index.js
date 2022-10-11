@@ -4,7 +4,6 @@ import BaseLayout from '../layouts/base';
 import { getSession, useSession } from 'next-auth/react';
 import AdminDashboard from '../components/admin/AdminDashboard';
 import EmployeeDashboard from '../components/employee/EmployeeDashboard';
-import axios from 'axios';
 
 const Home = props => {
 	const { data: session } = useSession();
@@ -27,7 +26,18 @@ export const getServerSideProps = async context => {
 	let pieData = [];
 	let employees = [];
 
-	if (session?.user.is_admin === false) {
+	if (session?.user.is_admin) {
+		try {
+			const res = await fetch(
+				`${process.env.BACKEND_URL}/comp/compemplist/${session.user.company}`
+			);
+			const data = await res.json();
+
+			employees = data;
+		} catch (err) {
+			console.log('--------------------------------------\n', err);
+		}
+	} else {
 		try {
 			const res = await fetch(`${process.env.BACKEND_URL}/emp/tasksdata`, {
 				method: 'post',
@@ -66,17 +76,6 @@ export const getServerSideProps = async context => {
 
 				pieData.push([t.break, t.work, t.meeting]);
 			});
-		} catch (err) {
-			console.log('--------------------------------------\n', err);
-		}
-	} else {
-		try {
-			const res = await fetch(
-				`${process.env.BACKEND_URL}/comp/compemplist/${session.user.company}`
-			);
-			const data = await res.json();
-
-			employees = data;
 		} catch (err) {
 			console.log('--------------------------------------\n', err);
 		}

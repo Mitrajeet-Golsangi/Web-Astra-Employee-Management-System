@@ -98,7 +98,10 @@ const Login = props => {
 
 export const getServerSideProps = async context => {
 	return {
-		props: { message: context.query.message },
+		props: {
+			message:
+				context.query.message === undefined ? null : context.query.message,
+		},
 	};
 };
 

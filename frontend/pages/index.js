@@ -26,7 +26,7 @@ export const getServerSideProps = async context => {
 		`${process.env.BACKEND_URL}/emp/${session?.user._id}`
 	);
 	const emp_data = await emp.json();
-	if (emp_data.disabled)
+	if (emp_data !== null && emp_data?.disabled)
 		return {
 			redirect: {
 				permanent: false,

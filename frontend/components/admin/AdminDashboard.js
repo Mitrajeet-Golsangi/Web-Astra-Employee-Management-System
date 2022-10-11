@@ -7,13 +7,15 @@ const AdminDashboard = props => {
 	const { setMessage } = React.useContext(notificationContext);
 	const router = useRouter();
 
-	const disableUser = id => {
-		console.log(id);
+	const disableUser = (id, disabled) => {
 		axios
-			.put(`${process.env.BACKEND_URL}/emp/${id}`, { disabled: true })
-			.then(res => setMessage('User Disabled Successfully !'))
+			.put(`${process.env.BACKEND_URL}/emp/${id}`, { disabled: disabled })
+			.then(res =>
+				setMessage(`User ${disabled ? 'Disabled' : 'Enabled'} Successfully !`)
+			)
 			.catch(err => setMessage(err.message));
 	};
+	console.log(props.employees);
 	return (
 		<div className="overflow-x-auto w-full p-5">
 			<table className="table table-compact w-full">
@@ -21,33 +23,21 @@ const AdminDashboard = props => {
 				<thead>
 					<tr>
 						<th>
-							<label>
-								<input
-									type="checkbox"
-									className="checkbox"
-								/>
-							</label>
+							<label>Sr. No.</label>
 						</th>
 						<th>Name</th>
 						<th>Email</th>
-						<th>Disable</th>
+						<th>Disabled</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					{props.employees?.map(emp => (
+					{props.employees?.map((emp, idx) => (
 						<tr
 							key={emp.user._id}
 							id={emp.user._id}
 						>
-							<th>
-								<label>
-									<input
-										type="checkbox"
-										className="checkbox"
-									/>
-								</label>
-							</th>
+							<th>{idx + 1}</th>
 							<td>
 								<div className="flex items-center space-x-3">
 									{emp.user.image ? (
@@ -77,12 +67,12 @@ const AdminDashboard = props => {
 							</td>
 							<td>{emp.user.email}</td>
 							<td>
-								<button
-									className="btn btn-ghost btn-xs"
-									onClick={() => disableUser(emp.user._id)}
-								>
-									Disabled
-								</button>
+								<input
+									type="checkbox"
+									className="self-center checkbox checkbox-primary"
+									defaultChecked={emp.disabled}
+									onChange={e => disableUser(emp.user._id, e.target.checked)}
+								/>
 							</td>
 							<th>
 								<button

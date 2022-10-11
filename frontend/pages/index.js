@@ -26,15 +26,24 @@ export const getServerSideProps = async context => {
 		`${process.env.BACKEND_URL}/emp/${session?.user._id}`
 	);
 	const emp_data = await emp.json();
-	if (emp_data !== null && emp_data?.disabled)
+	if (emp_data !== null) {
+		if (emp_data?.disabled)
+			return {
+				redirect: {
+					permanent: false,
+					destination: '/auth/login?message=Access%20Denied%20!',
+				},
+				props: {},
+			};
+	} else
 		return {
 			redirect: {
 				permanent: false,
-				destination: '/auth/login?message=Access%20Denied%20!',
+				destination: '/auth/login?message=You%20are%20not%20an%20employee%20!',
 			},
 			props: {},
 		};
-	
+
 	let barData = [];
 	let pieData = [];
 	let employees = [];

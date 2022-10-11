@@ -4,7 +4,7 @@ import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChart = props => {
+const EmployeePieChart = props => {
 	const data = {
 		labels: props.labels,
 		datasets: [
@@ -31,4 +31,4 @@ const PieChart = props => {
 	return <Doughnut data={data} />;
 };
 
-export default PieChart;
+export default EmployeePieChart;

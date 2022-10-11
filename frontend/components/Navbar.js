@@ -27,7 +27,7 @@ const Navbar = () => {
 			<div className="flex items-center">
 				{session?.user.image ? (
 					<div className="flex justify-end avatar mr-4">
-						<div className="w-1/3 rounded-full">
+						<div className="w-16 rounded-full">
 							<img src={session?.user.image} />
 						</div>
 					</div>

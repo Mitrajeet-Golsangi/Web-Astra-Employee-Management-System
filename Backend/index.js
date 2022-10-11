@@ -22,6 +22,8 @@ const TaskRouter = require('./routes/TaskRoutes');
 
 const dbConnect = require('./utils/dbConnect');
 
+require('dotenv').config();
+
 dbConnect();
 
 const app = express();
@@ -43,6 +45,8 @@ app.use(
 	})
 );
 
+const port = process.env.PORT || 3000;
+
 app.use(function (req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.setHeader(
@@ -61,9 +65,11 @@ app.use('/comp', CompanyRouter);
 app.use('/user', UserRouter);
 app.use('/task', TaskRouter);
 
+app.set('json spaces', 100);
+
 app.get('/', (req, res) => {
-	res.setHeader('Content-Type', 'text/html');
-	res.end('Hello there, Welcome !!!!!!');
+	res.setHeader('Content-Type', 'application/json');
+	res.json({ message: 'Hello there, Welcome !!!!!!' });
 });
 
 server.listen(port, () => {

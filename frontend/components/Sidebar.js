@@ -28,31 +28,40 @@ const Sidebar = props => {
 						{session?.user.is_admin ? (
 							<>
 								<li>
-									<span className="flex items-center">
-										<MdOutlineDashboard />
-										<Link href="/">Dashboard</Link>
-									</span>
+									<Link href="/">
+										<span className="flex items-center">
+											<MdOutlineDashboard />
+											<span>Dashboard</span>
+										</span>
+									</Link>
 								</li>
 								<li>
-									<span className="flex items-center">
-										<AiOutlineUserAdd />
-										<Link href="/employee/add">Add Employee</Link>
-									</span>
+									<Link href="/employee/add">
+										<span className="flex items-center">
+											<AiOutlineUserAdd />
+											<span>Add Employee</span>
+										</span>
+									</Link>
 								</li>
 							</>
 						) : (
 							<>
 								<li>
-									<span className="flex items-center">
-										<MdOutlineDashboard />
-										<Link href="/">Dashboard</Link>
-									</span>
+									<Link href="/">
+										<span className="flex items-center w-full">
+											<MdOutlineDashboard />
+											<span>Dashboard</span>
+										</span>
+									</Link>
 								</li>
 								<li>
-									<span className="flex items-center">
+									<label
+										htmlFor="tasks-modal"
+										className="flex items-center"
+									>
 										<GrChapterAdd />
-										<label htmlFor="tasks-modal">Add Task</label>
-									</span>
+										<span>Add Task</span>
+									</label>
 								</li>
 							</>
 						)}

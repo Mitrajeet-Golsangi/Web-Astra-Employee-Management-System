@@ -6,24 +6,44 @@ import CustomRadio from '../partials/Form Components/CustomRadio';
 
 import { notificationContext } from '../../context/notificationContext';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const TasksModal = () => {
-	const [taskInfo, setTaskInfo] = React.useState({
-		description: null,
-		start_time: null,
-		duration: null,
-		task_type: null,
-		id: null,
-	});
-	const { setMessage } = React.useContext(notificationContext);
+	const router = useRouter();
 	const { data: session } = useSession();
 
+	const [maxVal, setMaxVal] = React.useState(null);
+	const [taskInfo, setTaskInfo] = React.useState({
+		description: '',
+		start_time: '',
+		duration: '',
+		task_type: '',
+		id: session?.user._id,
+	});
+	const { setMessage } = React.useContext(notificationContext);
+
+	React.useEffect(() => {
+		setMaxVal(new Date().toISOString().split('.')[0]),
+			setTaskInfo({ ...taskInfo, id: session?.user._id });
+	}, [session]);
+
 	const submitHandler = () => {
-		setTaskInfo({ ...taskInfo, id: session?.user._id });
+		console.log(taskInfo);
+
 		axios
 			.post(`${process.env.BACKEND_URL}/task/create`, taskInfo)
-			.then(_ => setMessage('Task Added Successfully !'))
-			.catch(err => setMEssage(err.message));
+			.then(_ => {
+				setMessage('Task Added Successfully !');
+				setTaskInfo({
+					description: '',
+					start_time: '',
+					duration: '',
+					task_type: '',
+					id: session?.user._id,
+				});
+				router.push('/');
+			})
+			.catch(err => setMessage(err.message));
 	};
 
 	return (
@@ -107,7 +127,7 @@ const TasksModal = () => {
 							onChange={({ target }) =>
 								setTaskInfo({ ...taskInfo, start_time: target.value })
 							}
-							max={new Date().toISOString().split('.')[0]}
+							max={maxVal}
 						/>
 						<CustomInput
 							value={taskInfo.duration}
@@ -131,6 +151,6 @@ const TasksModal = () => {
 			</label>
 		</>
 	);
-};
+};;;;;
 
 export default TasksModal;

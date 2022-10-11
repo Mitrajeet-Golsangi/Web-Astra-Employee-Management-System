@@ -1,0 +1,12 @@
+{
+	"today": {
+		"work": 100,
+		"meeting": 200,
+		"break": 300
+	},
+	"yesterday": {
+		"work": 300,
+		"meeting": 200,
+		"break": 100
+	}
+}

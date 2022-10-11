@@ -98,7 +98,7 @@ export const ChangeAvatarModal = props => {
 					.then(() => {
 						props.setSrc(link);
 						setLoading(false);
-						Router.push(`/profile`);
+						Router.push(`/profile/${session?.user._id}`);
 					})
 					.catch(() => setLoading(false));
 			},

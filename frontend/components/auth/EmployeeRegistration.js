@@ -35,9 +35,13 @@ const EmployeeRegistration = () => {
 			.then(res =>
 				login(res.data.user.email, res.data.user.password, setMessage)
 			)
-			.catch(err =>
-				setMessage(err.response.data.message || 'Something went wrong !')
-			)
+			.catch(err => {
+				try {
+					setMessage(err.response.data.message);
+				} catch (_) {
+					setMessage('Something Went Wrong !');
+				}
+			})
 			.finally(setLoading(false));
 	};
 

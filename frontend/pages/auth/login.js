@@ -12,13 +12,15 @@ import { useRouter } from 'next/router';
 import { notificationContext } from '../../context/notificationContext';
 import { login } from '../../utils/authentication';
 
-const Login = () => {
+const Login = props => {
 	const [userInfo, setUserInfo] = React.useState({ email: '', password: '' });
 	const [loading, setLoading] = React.useState(false);
 
 	const { setMessage } = React.useContext(notificationContext);
 
 	const router = useRouter();
+
+	props.message ? setMessage(props.message) : null;
 
 	const submitHandler = async e => {
 		e.preventDefault();
@@ -92,6 +94,15 @@ const Login = () => {
 			</div>
 		</>
 	);
+};
+
+export const getServerSideProps = async context => {
+	return {
+		props: {
+			message:
+				context.query.message === undefined ? null : context.query.message,
+		},
+	};
 };
 
 export default Login;

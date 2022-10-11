@@ -6,8 +6,11 @@ import CustomRadio from '../partials/Form Components/CustomRadio';
 
 import { notificationContext } from '../../context/notificationContext';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const TasksModal = () => {
+	const router = useRouter();
+
 	const [taskInfo, setTaskInfo] = React.useState({
 		description: null,
 		start_time: null,
@@ -22,7 +25,10 @@ const TasksModal = () => {
 		setTaskInfo({ ...taskInfo, id: session?.user._id });
 		axios
 			.post(`${process.env.BACKEND_URL}/task/create`, taskInfo)
-			.then(_ => setMessage('Task Added Successfully !'))
+			.then(_ => {
+				setMessage('Task Added Successfully !');
+				router.push('/');
+			})
 			.catch(err => setMessage(err.message));
 	};
 
@@ -131,6 +137,6 @@ const TasksModal = () => {
 			</label>
 		</>
 	);
-};
+};;
 
 export default TasksModal;

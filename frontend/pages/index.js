@@ -22,29 +22,31 @@ Home.getLayout = page => <BaseLayout>{page}</BaseLayout>;
 
 export const getServerSideProps = async context => {
 	const session = await getSession(context);
-	if (session.user.is_admin === false) {
-		const emp = await fetch(
-			`${process.env.BACKEND_URL}/emp/${session?.user._id}`
-		);
-		const emp_data = await emp.json();
-		if (emp_data !== null) {
-			if (emp_data?.disabled)
+	if (session) {
+		if (session?.user.is_admin === false) {
+			const emp = await fetch(
+				`${process.env.BACKEND_URL}/emp/${session?.user._id}`
+			);
+			const emp_data = await emp.json();
+			if (emp_data !== null) {
+				if (emp_data?.disabled)
+					return {
+						redirect: {
+							permanent: false,
+							destination: '/auth/login?message=Access%20Denied%20!',
+						},
+						props: {},
+					};
+			} else
 				return {
 					redirect: {
 						permanent: false,
-						destination: '/auth/login?message=Access%20Denied%20!',
+						destination:
+							'/auth/login?message=You%20are%20not%20an%20employee%20!',
 					},
 					props: {},
 				};
-		} else
-			return {
-				redirect: {
-					permanent: false,
-					destination:
-						'/auth/login?message=You%20are%20not%20an%20employee%20!',
-				},
-				props: {},
-			};
+		}
 	}
 	let barData = [];
 	let pieData = [];

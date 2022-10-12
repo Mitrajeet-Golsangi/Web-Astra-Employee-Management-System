@@ -33,13 +33,13 @@ const AdminDashboard = props => {
 				<tbody>
 					{props.employees?.map((emp, idx) => (
 						<tr
-							key={emp.user._id}
-							id={emp.user._id}
+							key={emp.user?._id}
+							id={emp.user?._id}
 						>
 							<th>{idx + 1}</th>
 							<td>
 								<div className="flex items-center space-x-3">
-									{emp.user.image ? (
+									{emp.user?.image ? (
 										<div className="avatar">
 											<div className="mask mask-squircle w-12 h-12">
 												<img
@@ -52,31 +52,31 @@ const AdminDashboard = props => {
 										<div className="flex justify-end avatar placeholder mr-4">
 											<div className="mask mask-squircle w-12 h-12 bg-secondary-focus text-base-100 w-16">
 												<span className="text-xl">
-													{emp.user.fname[0].toUpperCase()}
+													{emp.user?.fname[0].toUpperCase()}
 												</span>
 											</div>
 										</div>
 									)}
 									<div>
 										<div className="font-bold">
-											{emp.user.fname} {emp.user.lname}
+											{emp.user?.fname} {emp.user?.lname}
 										</div>
 									</div>
 								</div>
 							</td>
-							<td>{emp.user.email}</td>
+							<td>{emp.user?.email}</td>
 							<td>
 								<input
 									type="checkbox"
 									className="self-center checkbox checkbox-primary"
 									defaultChecked={emp.disabled}
-									onChange={e => disableUser(emp.user._id, e.target.checked)}
+									onChange={e => disableUser(emp.user?._id, e.target.checked)}
 								/>
 							</td>
 							<th>
 								<button
 									className="btn btn-ghost btn-xs"
-									onClick={() => router.push(`employee/${emp.user._id}`)}
+									onClick={() => router.push(`employee/${emp.user?._id}`)}
 								>
 									details
 								</button>

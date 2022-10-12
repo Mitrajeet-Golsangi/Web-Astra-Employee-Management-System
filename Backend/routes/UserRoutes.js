@@ -11,7 +11,8 @@ const mail = require('../utils/mail');
 const nodemailer = require('nodemailer');
 //email validation
 const emailValidator = require('deep-email-validator');
-
+const bcrypt = require('bcrypt');
+const { nextTick } = require('process');
 async function isEmailValid(email) {
 	return emailValidator.validate(email);
 }
@@ -58,51 +59,58 @@ router.get('/', (req, res, next) => {
 // Create a new user
 // completed partially
 let uid;
+
+
 router.post('/signup', (req, res, next) => {
 	Users.findOne({ email: req.body.email })
-		.then(
-			user => {
-				if (user != null) {
-					res.statusCode = 400;
-					// res.setHeader('Content-Type', 'application/json');
-					res.json({
-						success: false,
-						message: `User with emailid ${user.email} already exists`,
-					});
-				} else {
-					// try mail send
-					// const rand = Math.floor((Math.random() * 100) + 54);
-					// const host = req.get('host');
-					// let link = '';
-					Users.create(req.body)
-						.then(
-							newuser => {
-								res.statusCode = 200;
-								// res.setHeader('Content-Type', ' application/json');
-								res.json({
-									success: true,
-									message: 'User Registered',
-									user: newuser,
-								});
-								const link =
-									'http://' +
-									req.get('host') +
-									'/user/verify?id=' +
-									newuser._id;
-								uid = newuser.uid;
-								mail(req.body.email, link)
-									.then(reqp => {
-										console.log('Mail is success');
-									})
-									.catch(err => {
-										console.log(err);
-										res.json('Please provide valid email address');
-										next(err);
+	.then(
+		user => {
+			if (user != null) {
+				res.statusCode = 400;
+				// res.setHeader('Content-Type', 'application/json');
+				res.json({
+					success: false,
+					message: `User with emailid ${user.email} already exists`,
+				});
+			} else {
+				// try mail send
+				// const rand = Math.floor((Math.random() * 100) + 54);
+				// const host = req.get('host');
+				// let link = '';
+				const salt= bcrypt.genSalt(10);
+				salt
+				.then((s)=>{
+					const hashedpassword = bcrypt.hash(req.body.password,s);
+					hashedpassword
+					.then((pass)=>{
+						Users.create({fname:req.body.fname,password:pass,lname:req.body.lname,contact:req.body.contact,email:req.body.email})
+							.then(
+								newuser => {
+									res.statusCode = 200;
+									// res.setHeader('Content-Type', ' application/json');
+									res.json({
+										success: true,
+										message: 'User Registered',
+										user: newuser,
 									});
-							},
-							err => next(err)
-						)
-						.catch(err => next(err));
+									const link = "<h1>Kudoos !!!!<h1><br><h2>Welcome to Web-Astra Employees Portal !!!</h2>"
+									mail(req.body.email, link)
+										.then(reqp => {
+											console.log('Mail is success');
+										})
+										.catch(err => {
+											console.log(err);
+											res.json('Please provide valid email address');
+											next(err);
+										});
+								},
+								err => next(err)
+							)
+							.catch(err => next(err));
+					})
+					.catch((err)=>next(err));
+				})
+				.catch((err)=> next(err));
 				}
 			},
 			err => next(err)
@@ -123,33 +131,39 @@ router.post('/login', async (req, res, next) => {
 		res.send(user);
 	} else {
 		if (user != null) {
-			if (user.password === req.body.password) {
-				req.session.email = req.body.email;
-				// res.setHeader('Content-Type', ' application/json');
-				res.statusCode = 200;
-				// res.json({success: true,message:"Welcome, Your are successfully loged in !!!!!"});
-				// res.redirect('/');
-				req.session.regenerate(function (err) {
-					if (err) next(err);
 
-					// store user information in session, typically a user id
+			const p = bcrypt.compare(req.body.password,user.password);
+			p
+			.then((resp)=>{
+				if (resp) {
 					req.session.email = req.body.email;
-
-					// save the session before redirection to ensure page
-					// load does not happen before session is saved
-					req.session.save(function (err) {
-						if (err) return next(err);
-						res.send(user);
+					// res.setHeader('Content-Type', ' application/json');
+					res.statusCode = 200;
+					// res.json({success: true,message:"Welcome, Your are successfully loged in !!!!!"});
+					// res.redirect('/');
+					req.session.regenerate(function (err) {
+						if (err) next(err);
+	
+						// store user information in session, typically a user id
+						req.session.email = req.body.email;
+	
+						// save the session before redirection to ensure page
+						// load does not happen before session is saved
+						req.session.save(function (err) {
+							if (err) return next(err);
+							res.send(user);
+						});
 					});
-				});
-			} else {
-				res.statusCode = 403;
-				res.setHeader('Content-Type', 'application/json');
-				res.json({
-					success: false,
-					message: `${req.body.password} is wrong password`,
-				});
-			}
+				} else {
+					res.statusCode = 403;
+					res.setHeader('Content-Type', 'application/json');
+					res.json({
+						success: false,
+						message: `${req.body.password} is wrong password`,
+					});
+				}
+			})
+			.catch((err) => next(err));
 		} else {
 			res.statusCode = 404;
 			res.setHeader('Content-Type', 'application/json');

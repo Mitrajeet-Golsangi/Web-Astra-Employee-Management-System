@@ -10,6 +10,7 @@ const router = express.Router();
 
 // mailing services
 const mail = require('../utils/mail');
+const company = require('../models/Company');
 //Work in Progress Feature [Authantication]
 const isauth = (req, res, next) => {
     if (req.session.email) {
@@ -260,6 +261,10 @@ router.post('/emplist', (req, res, next) => {
 
 
 
+/*
+
+returns an object with the list of all the employees of a perticular company
+*/ 
 
 router.post('/compemplist', (req, res, next) => {
 
@@ -277,6 +282,62 @@ router.post('/compemplist', (req, res, next) => {
 })
 
 
+/* 
+    This function returns an object containtng all the tasks of all the employees 
+    of a perticula company with all the data of works, breaks and meeting minitus in it..
+    
+    reqired data from body :- company id and date in date format;
 
+*/
+router.post('/dayalltasks',(req,res,next)=>{
+
+    let data=[];
+
+    let w = 0;
+	let b = 0;
+	let m = 0;
+
+    let bdate = new Date((req.body.date).split('T')[0]);
+	let bday = bdate.getDate(); 
+    Employees.find({company:req.body.id})
+    .populate('tasks')
+    .then((employees)=>{
+        for(let i=0;i<employees.length;i++){
+            // console.log(employees[i])
+            let t = employees[i].tasks;
+            for(let j=0;j<t.length;j++){
+                let task_date = new Date(t[j].start_time.split('T')[0]);
+				task_date = task_date.getDate();
+
+                if(task_date == bday){
+                    data.push({
+                        task:t[j]
+                    });
+
+                    if (t[i].task_type.toLowerCase() === 'work') {
+						w = w + t[i].duration;
+					} else if (t[i].task_type.toLowerCase() === 'break') {
+						b = b + t[i].duration;
+					} else {
+						m = m + t[i].duration;
+					}
+                }
+            }
+        }
+
+        data.push({
+            work :w,
+            break:b,
+            meeting:m
+        });
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.send(data);
+    })
+    .catch((err)=>next(err));
+});
 
 module.exports = router;
+
+

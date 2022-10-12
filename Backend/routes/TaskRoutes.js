@@ -13,7 +13,8 @@ const isauth = (req, res, next) => {
 		next();
 	} else {
 		// res.redirect('/tasks/login');
-		res.end('You are not  logged in');
+		// res.end('You are not  logged in');
+		next();
 	}
 };
 

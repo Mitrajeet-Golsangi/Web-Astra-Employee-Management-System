@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const Users = require('../models/User');
 const Tasks = require('../models/Task');
 const { info } = require('console');
+const { ifError } = require('assert');
+const data = require('langs/data');
 
 // Creating a Router for Employees Operations
 const router = express.Router();
@@ -14,7 +16,8 @@ const isauth = (req, res, next) => {
 		next();
 	} else {
 		// res.redirect('/users/login');
-		res.end('You are not  logged in');
+		// res.end('You are not  logged in');
+		next();
 	}
 };
 
@@ -216,7 +219,6 @@ Returns an Json Object with the tasks data of that employee for a week...
 Takes employee_id as an body:parameter..
 
 */
-
 router.post('/tasksdata', (req, res, next) => {
 	let w = [0, 0, 0, 0, 0, 0, 0, 0];
 	let b = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -226,9 +228,9 @@ router.post('/tasksdata', (req, res, next) => {
 
 	let data = [];
 
-	Employees.findOne({ user: req.body.id })
+	Employees.findOne({ _id: req.body.id })
 		.populate('tasks')
-		.then(employee => {
+		.then((employee) => {
 			let t = employee.tasks;
 			let n = t.length;
 			for (let i = 0; i < n; i++) {
@@ -244,13 +246,13 @@ router.post('/tasksdata', (req, res, next) => {
 					}
 				}
 			}
-						for (let i = 0; i < 7; i++) {
-							data.push({
-								work: w[i],
-								break: b[i],
-								meeting: m[i],
-							});
-						}
+			for (let i = 0; i < 7; i++) {
+				data.push({
+					work: w[i],
+					break: b[i],
+					meeting: m[i],
+				});
+			}
 			res.status = 200;
 			res.setHeader('Content-Type', 'application/json');
 			res.json({ data: data });
@@ -261,6 +263,109 @@ router.post('/tasksdata', (req, res, next) => {
 			res.json({ data: data });
 			next(err);
 		});
+});
+
+
+/* Returns an Json Object with the tasks data for a perticular date of a specific employee.
+   Takes employee_id as and body:parameter;
+   e.g :
+   
+   req.body.id = 844837373274347
+   and 
+   date in date format;
+*/
+router.post('/datetask', (req, res, next) => {
+
+	Employees.findById(req.body.id)
+		.populate('tasks')
+		.then((employee) => {
+
+			let bdate = new Date((req.body.date).split('T')[0]);
+			let bday = bdate.getDate(); 
+			let w = 0;
+			let b = 0;
+			let m = 0;
+
+			let data = [];
+			let t = employee.tasks;
+
+			for (let i = 0; i < t.length; i++) {
+
+				let task_date = new Date(t[i].start_time.split('T')[0]);
+				task_date = task_date.getDate();
+
+				if (bday == task_date) {
+					data.push({
+						task:t[i]
+					});
+
+					if (t[i].task_type.toLowerCase() === 'work') {
+						w = w + t[i].duration;
+					} else if (t[i].task_type.toLowerCase() === 'break') {
+						b = b + t[i].duration;
+					} else {
+						m = m + t[i].duration;
+					}
+
+				}
+
+			}
+
+			data.push({
+				work:w,
+				break:b,
+				meeting:m
+			})
+			res.statusCode = 200;
+			res.setHeader('Content-Type', 'application/json');
+			res.json({data:data});
+
+		})
+		.catch((err) => next(err));
+});
+
+
+/* returns an object with All the tasks of a particular employees
+	body Parameter :- Employee id; 
+*/
+
+router.post('/empalltasks',(req,res,next)=>{
+
+	let data = [];
+	let w=0;
+	let b=0;
+	let m = 0;
+	let id = req.body.id;
+	Employees.findById(id)
+	.populate('tasks')
+	.then((employee)=>{
+		let t = employee.tasks;
+
+		for(let i=0; i<t.length; i++){
+			data.push({
+				task:t[i]
+			});
+			if (t[i].task_type.toLowerCase() === 'work') {
+				w = w + t[i].duration;
+			} else if (t[i].task_type.toLowerCase() === 'break') {
+				b = b + t[i].duration;
+			} else {
+				m = m + t[i].duration;
+			}
+		}
+
+		data.push({
+			work:w,
+			break:b,
+			meeting:m
+		});
+
+
+		res.statusCode = 200;
+		res.setHeader('Content-Type', 'application/json');
+		res.json(data);
+	})
+	.catch((err)=>next(err));
 });
 
 module.exports = router;

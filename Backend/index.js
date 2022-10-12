@@ -28,7 +28,7 @@ dbConnect();
 
 const app = express();
 const server = http.createServer(app);
-
+const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 

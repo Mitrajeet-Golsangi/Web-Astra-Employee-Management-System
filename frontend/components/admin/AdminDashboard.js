@@ -15,7 +15,6 @@ const AdminDashboard = props => {
 			)
 			.catch(err => setMessage(err.message));
 	};
-	console.log(props.employees);
 	return (
 		<div className="overflow-x-auto w-full p-5">
 			<table className="table table-compact w-full">

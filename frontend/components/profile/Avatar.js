@@ -79,7 +79,7 @@ export const ChangeAvatarModal = props => {
 	const { data: session } = useSession();
 
 	React.useEffect(() => {
-		if (session) setUser(session.user._id);
+		if (session) setUser(session?.user._id);
 	});
 
 	const submitHandler = e => {

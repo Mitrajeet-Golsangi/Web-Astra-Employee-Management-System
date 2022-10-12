@@ -20,14 +20,13 @@ import { reloadSession } from '../../utils/helpers';
 import CustomRadio from '../../components/partials/Form Components/CustomRadio';
 
 const Profile = ({ user }) => {
-	const { data: session } = useSession();
-	const [img, setImg] = React.useState(user.image);
+	const [img, setImg] = React.useState(user?.image);
 	const [userInfo, setUserInfo] = React.useState(user);
 	const { setMessage } = React.useContext(notificationContext);
 
 	const submitHandler = () => {
 		axios
-			.put(`${process.env.BACKEND_URL}/user/${session?.user._id}`, {
+			.put(`${process.env.BACKEND_URL}/user/${user?._id}`, {
 				fname: userInfo?.fname,
 				lname: userInfo?.lname,
 				contact: userInfo?.contact,
@@ -126,10 +125,14 @@ Profile.getLayout = page => <BaseLayout>{page}</BaseLayout>;
 
 export const getServerSideProps = async ctx => {
 	const session = await getSession(ctx);
+	let user = null;
+	if (session) {
+		user = session.user;
+	}
 
 	return {
 		props: {
-			user: session?.user,
+			user: user,
 		},
 	};
 };
